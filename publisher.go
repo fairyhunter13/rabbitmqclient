@@ -15,4 +15,7 @@ func newPublisherManager(conn amqpwrapper.IConnectionManager) (res *PublisherMan
 	return
 }
 
-func Publish()
+// Publish publishes the message with current arguments.
+func (pm *PublisherManager) Publish(args PublishArgs) (err error) {
+	return
+}
