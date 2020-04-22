@@ -21,10 +21,11 @@ func NewContainer(conn amqpwrapper.IConnectionManager) (res *Container, err erro
 		err = amqpwrapper.ErrNilArg
 		return
 	}
-	res = new(Container)
-	res.publisherManager = newPublisherManager(conn)
-	res.mutex = new(sync.RWMutex)
-	res.topology = NewTopology()
+	res = &Container{
+		publisherManager: newPublisherManager(conn),
+		mutex:            new(sync.RWMutex),
+		topology:         NewTopology(),
+	}
 	return
 }
 
@@ -37,15 +38,27 @@ func (c *Container) Publish(exchange, topic string, args OtherPublishArgs) (err 
 		c.mutex.RUnlock()
 	}
 	if topic == "" {
-		topic = DefaultKey
+		topic = DefaultTopic
 	}
-	pmArgs := PublishArgs{
-		Exchange:         exchange,
-		Key:              topic,
-		OtherPublishArgs: args,
-	}
-	err = c.publisherManager.Publish(pmArgs)
+	err = c.publisherManager.Publish(
+		PublishArgs{
+			Exchange:         exchange,
+			Key:              topic,
+			OtherPublishArgs: args,
+		},
+	)
 	return
+}
+
+// SetExchange sets the exchange of this container.
+func (c *Container) SetExchange(exc *ExchangeDeclareArgs) *Container {
+	c.setDefaultExchange()
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+	if exc != nil {
+		c.globalExchange = exc
+	}
+	return c
 }
 
 // SetExchangeName sets the exchange name of all publishers and consumers
@@ -58,12 +71,4 @@ func (c *Container) SetExchangeName(name string) *Container {
 	}
 	c.topology.AddExchangeDeclare(*c.globalExchange)
 	return c
-}
-
-func (c *Container) setDefaultExchange() {
-	c.mutex.Lock()
-	defer c.mutex.Unlock()
-	if c.globalExchange == nil {
-		c.globalExchange = new(ExchangeDeclareArgs).Default()
-	}
 }
