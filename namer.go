@@ -22,5 +22,5 @@ func GenerateExchangeName(isPrefix bool, name string) string {
 	if isPrefix {
 		return fmt.Sprintf("%s%s", DefaultPrefixExchange, name)
 	}
-	return fmt.Sprintf("%s", name)
+	return name
 }
