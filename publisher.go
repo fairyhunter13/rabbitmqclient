@@ -8,13 +8,6 @@ import (
 	"github.com/streadway/amqp"
 )
 
-const (
-	// DefaultProducerKey specifies the key for producer.
-	DefaultProducerKey = "producer.%d"
-	// DefaultProducerType specifies the default type of channel for the amqpwrapper.
-	DefaultProducerType = amqpwrapper.Producer
-)
-
 // PublisherManager manages all the publisher for the Container.
 type PublisherManager struct {
 	conn           amqpwrapper.IConnectionManager
@@ -72,14 +65,14 @@ func (pm *PublisherManager) getChannel(idChan uint64, isNew bool) (ch *amqp.Chan
 		idChan = atomic.LoadUint64(&pm.channelCounter)
 		atomic.AddUint64(&pm.channelCounter, 1)
 	}
-	keyChannel = fmt.Sprintf(DefaultProducerKey, idChan)
+	keyChannel = fmt.Sprintf(DefaultKeyProducer, idChan)
 	if isNew {
 		ch, err = pm.conn.InitChannelAndGet(EmptyChannel, amqpwrapper.InitArgs{
 			Key:      keyChannel,
-			TypeChan: DefaultProducerType,
+			TypeChan: DefaultTypeProducer,
 		})
 	} else {
-		ch, err = pm.conn.GetChannel(keyChannel, DefaultProducerType)
+		ch, err = pm.conn.GetChannel(keyChannel, DefaultTypeProducer)
 	}
 	return
 }

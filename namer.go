@@ -1,20 +1,7 @@
 package rabbitmqclient
 
-import "fmt"
-
-// List of default constants for this library.
-const (
-	DefaultPrefixExchange = "amqp."
-	DefaultQueue          = "default"
-	DefaultKey            = "default"
-)
-
-// List of all exchange type in rabbitmq
-const (
-	TypeDirect  = `direct`
-	TypeFanout  = `fanout`
-	TypeTopic   = `topic`
-	TypeHeaders = `headers`
+import (
+	"fmt"
 )
 
 // GenerateExchangeName generates the default exchange name of this library.

@@ -55,7 +55,7 @@ type QueueBindArgs struct {
 // Default sets the default values of the struct variables.
 func (q *QueueBindArgs) Default() *QueueBindArgs {
 	q.Name = DefaultQueue
-	q.Key = DefaultKey
+	q.Key = DefaultTopic
 	q.Exchange = GenerateExchangeName(true, TypeDirect)
 	q.NoWait = false
 	return q

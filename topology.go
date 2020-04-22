@@ -39,12 +39,15 @@ func (t *Topology) syncTime() {
 }
 
 // IsUpdated checks if the topology has been updated or not.
-// IsUpdated also automatically sync the time of last time to the current time.
-func (t *Topology) IsUpdated() bool {
+// IsUpdated also automatically sync the time of last time to the current time if it is updated.
+func (t *Topology) IsUpdated() (result bool) {
 	t.mutex.Lock()
 	defer t.mutex.Unlock()
-	defer t.syncTime()
-	return t.currentTime.After(*t.lastTime)
+	result = t.currentTime.After(*t.lastTime)
+	if result {
+		t.syncTime()
+	}
+	return
 }
 
 // AddExchangeDeclare add the exchange declare args to the topology.
