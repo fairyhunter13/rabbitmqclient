@@ -11,7 +11,7 @@ func (c *Container) setDefaultExchange() {
 func (c *Container) setDefaultTopology() {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
-	if c.topology == nil {
-		c.topology = NewTopology()
+	if c.Topology == nil {
+		c.Topology = NewTopology()
 	}
 }

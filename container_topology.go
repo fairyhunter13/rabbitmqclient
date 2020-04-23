@@ -6,7 +6,7 @@ func (c *Container) SetTopology(topo *Topology) *Container {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 	if topo != nil {
-		c.topology = topo
+		c.Topology = topo
 	}
 	return c
 }
