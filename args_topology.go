@@ -24,6 +24,15 @@ func (e *ExchangeDeclareArgs) Default() *ExchangeDeclareArgs {
 	return e
 }
 
+// ExchangeBindArgs specifies the argumenst to bind an exchange to other exchange.
+type ExchangeBindArgs struct {
+	Destination string
+	Key         string
+	Source      string
+	NoWait      bool
+	Args        amqp.Table
+}
+
 // QueueDeclareArgs specifies the arguments to declare queue.
 type QueueDeclareArgs struct {
 	Name       string

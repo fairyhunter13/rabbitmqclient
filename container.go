@@ -9,10 +9,10 @@ import (
 // Container is the struct to make custom Publisher and Consumer.
 type Container struct {
 	publisherManager *PublisherManager
-	topology         *Topology
 	mutex            *sync.RWMutex
 	// Mutex protects the following fields
 	globalExchange *ExchangeDeclareArgs
+	*Topology
 }
 
 // NewContainer return the container of the connection manager for amqp.Wrapper
@@ -24,7 +24,7 @@ func NewContainer(conn amqpwrapper.IConnectionManager) (res *Container, err erro
 	res = &Container{
 		publisherManager: newPublisherManager(conn),
 		mutex:            new(sync.RWMutex),
-		topology:         NewTopology(),
+		Topology:         NewTopology(),
 	}
 	return
 }
@@ -69,6 +69,6 @@ func (c *Container) SetExchangeName(name string) *Container {
 	if name != "" {
 		c.globalExchange.Name = name
 	}
-	c.topology.AddExchangeDeclare(*c.globalExchange)
+	c.AddExchangeDeclare(*c.globalExchange)
 	return c
 }
