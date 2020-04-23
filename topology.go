@@ -26,8 +26,7 @@ func NewTopology() *Topology {
 	}
 }
 
-// Update updates the last time of the topology.
-func (t *Topology) Update() *Topology {
+func (t *Topology) update() *Topology {
 	t.mutex.Lock()
 	defer t.mutex.Unlock()
 	*t.currentTime = time.Now()
@@ -53,8 +52,9 @@ func (t *Topology) IsUpdated() (result bool) {
 // AddExchangeDeclare add the exchange declare args to the topology.
 func (t *Topology) AddExchangeDeclare(args ExchangeDeclareArgs) *Topology {
 	t.mutex.Lock()
-	defer t.mutex.Unlock()
 	t.exchangeDeclareArgs = append(t.exchangeDeclareArgs, args)
+	t.mutex.Unlock()
+	t.update()
 	return t
 }
 
@@ -68,8 +68,9 @@ func (t *Topology) GetExchangeDeclare() []ExchangeDeclareArgs {
 // AddQueueDeclare adds the queue declaration into the topology
 func (t *Topology) AddQueueDeclare(args QueueDeclareArgs) *Topology {
 	t.mutex.Lock()
-	defer t.mutex.Unlock()
 	t.queueDeclareArgs = append(t.queueDeclareArgs, args)
+	t.mutex.Unlock()
+	t.update()
 	return t
 }
 
@@ -83,8 +84,9 @@ func (t *Topology) GetQueueDeclare() []QueueDeclareArgs {
 // AddQueueBind adds the queue bind args to the topology
 func (t *Topology) AddQueueBind(args QueueBindArgs) *Topology {
 	t.mutex.Lock()
-	defer t.mutex.Unlock()
 	t.queueBindArgs = append(t.queueBindArgs, args)
+	t.mutex.Unlock()
+	t.update()
 	return t
 }
 
