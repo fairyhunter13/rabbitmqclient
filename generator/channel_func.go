@@ -1,4 +1,4 @@
-package rabbitmqclient
+package generator
 
 import "github.com/streadway/amqp"
 

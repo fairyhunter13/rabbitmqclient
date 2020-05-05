@@ -4,6 +4,8 @@ import (
 	"sync"
 
 	"github.com/fairyhunter13/amqpwrapper"
+	"github.com/fairyhunter13/rabbitmqclient/args"
+	"github.com/fairyhunter13/rabbitmqclient/constant"
 )
 
 // Container is the struct to make custom Publisher and Consumer.
@@ -11,7 +13,7 @@ type Container struct {
 	publisherManager *PublisherManager
 	mutex            *sync.RWMutex
 	// Mutex protects the following fields
-	globalExchange *ExchangeDeclareArgs
+	globalExchange *args.ExchangeDeclare
 	*Topology
 }
 
@@ -30,7 +32,7 @@ func NewContainer(conn amqpwrapper.IConnectionManager) (res *Container, err erro
 }
 
 // Publish publishes the message to the default exchange with the default topic.
-func (c *Container) Publish(exchange, topic string, args OtherPublishArgs) (err error) {
+func (c *Container) Publish(exchange, topic string, arg args.OtherPublish) (err error) {
 	c.setDefaultExchange()
 	if exchange == "" {
 		c.mutex.RLock()
@@ -38,20 +40,20 @@ func (c *Container) Publish(exchange, topic string, args OtherPublishArgs) (err 
 		c.mutex.RUnlock()
 	}
 	if topic == "" {
-		topic = DefaultTopic
+		topic = constant.DefaultTopic
 	}
 	err = c.publisherManager.Publish(
-		PublishArgs{
-			Exchange:         exchange,
-			Key:              topic,
-			OtherPublishArgs: args,
+		args.Publish{
+			Exchange:     exchange,
+			Key:          topic,
+			OtherPublish: arg,
 		},
 	)
 	return
 }
 
 // SetExchange sets the exchange of this container.
-func (c *Container) SetExchange(exc *ExchangeDeclareArgs) *Container {
+func (c *Container) SetExchange(exc *args.ExchangeDeclare) *Container {
 	c.setDefaultExchange()
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
