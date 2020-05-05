@@ -1,4 +1,4 @@
-package rabbitmqclient
+package constant
 
 import "github.com/fairyhunter13/amqpwrapper"
 
