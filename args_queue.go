@@ -1,8 +1,6 @@
-package args
+package rabbitmqclient
 
 import (
-	"github.com/fairyhunter13/rabbitmqclient/constant"
-	"github.com/fairyhunter13/rabbitmqclient/generator"
 	"github.com/streadway/amqp"
 )
 
@@ -17,7 +15,7 @@ type QueueDeclare struct {
 
 // Default sets the default values of the struct variables.
 func (q *QueueDeclare) Default() *QueueDeclare {
-	q.Name = constant.DefaultQueue
+	q.Name = DefaultQueue
 	q.Durable = true
 	q.AutoDelete = false
 	q.Exclusive = false
@@ -41,9 +39,9 @@ type QueueBind struct {
 
 // Default sets the default values of the struct variables.
 func (q *QueueBind) Default() *QueueBind {
-	q.Name = constant.DefaultQueue
-	q.Key = constant.DefaultTopic
-	q.Exchange = generator.GenerateExchangeName(true, constant.TypeDirect)
+	q.Name = DefaultQueue
+	q.Key = DefaultTopic
+	q.Exchange = generateExchangeName(true, TypeDirect)
 	q.NoWait = false
 	return q
 }

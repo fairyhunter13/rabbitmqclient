@@ -5,8 +5,6 @@ import (
 	"sync/atomic"
 
 	"github.com/fairyhunter13/amqpwrapper"
-	"github.com/fairyhunter13/rabbitmqclient/args"
-	"github.com/fairyhunter13/rabbitmqclient/constant"
 )
 
 // Container is the struct to make custom Publisher and Consumer.
@@ -16,7 +14,7 @@ type Container struct {
 	*Topology
 	mutex *sync.RWMutex
 	// Mutex protects the following fields
-	globalExchange *args.ExchangeDeclare
+	globalExchange *ExchangeDeclare
 
 	savedStatus uint64
 }
@@ -37,7 +35,7 @@ func NewContainer(conn amqpwrapper.IConnectionManager) (res *Container, err erro
 }
 
 // Publish publishes the message to the default exchange with the default topic.
-func (c *Container) Publish(exchange, topic string, arg args.OtherPublish) (err error) {
+func (c *Container) Publish(exchange, topic string, arg OtherPublish) (err error) {
 	if !c.isSaved() {
 		err = ErrContainerMustBeSavedFirst
 		return
@@ -48,14 +46,14 @@ func (c *Container) Publish(exchange, topic string, arg args.OtherPublish) (err 
 		c.mutex.RUnlock()
 	}
 	if topic == "" {
-		topic = constant.DefaultTopic
+		topic = DefaultTopic
 	}
 	err = c.Init()
 	if err != nil {
 		return
 	}
 	err = c.publisherManager.publish(
-		args.Publish{
+		Publish{
 			Exchange:     exchange,
 			Key:          topic,
 			OtherPublish: arg,
@@ -65,7 +63,7 @@ func (c *Container) Publish(exchange, topic string, arg args.OtherPublish) (err 
 }
 
 // SetExchange sets the exchange of this container.
-func (c *Container) SetExchange(exc *args.ExchangeDeclare) *Container {
+func (c *Container) SetExchange(exc *ExchangeDeclare) *Container {
 	c.setDefaultExchange()
 	if exc != nil {
 		c.mutex.Lock()
@@ -100,9 +98,9 @@ func (c *Container) Save() *Container {
 }
 
 func (c *Container) save() {
-	atomic.StoreUint64(&c.savedStatus, constant.TrueUint)
+	atomic.StoreUint64(&c.savedStatus, TrueUint)
 }
 
 func (c *Container) isSaved() bool {
-	return atomic.LoadUint64(&c.savedStatus) == constant.TrueUint
+	return atomic.LoadUint64(&c.savedStatus) == TrueUint
 }

@@ -3,27 +3,25 @@ package rabbitmqclient
 import (
 	"sync"
 	"time"
-
-	"github.com/fairyhunter13/rabbitmqclient/args"
 )
 
-// Topology contains all declarations needed to define the topology in the rabbitmq.
+// Topology contains all declarations needed to define the topology topology in the rabbitmq.
 type Topology struct {
 	mutex *sync.RWMutex
 	// Mutex protects the following fields
 	// exchange topology
-	exchangeDeclare        []args.ExchangeDeclare
-	exchangeDeclarePassive []args.ExchangeDeclarePassive
-	exchangeBind           []args.ExchangeBind
-	exchangeUnbind         []args.ExchangeUnbind
-	exchangeDelete         []args.ExchangeDelete
+	exchangeDeclare        []ExchangeDeclare
+	exchangeDeclarePassive []ExchangeDeclarePassive
+	exchangeBind           []ExchangeBind
+	exchangeUnbind         []ExchangeUnbind
+	exchangeDelete         []ExchangeDelete
 
 	// queue topology
-	queueDeclare        []args.QueueDeclare
-	queueDeclarePassive []args.QueueDeclarePassive
-	queueBind           []args.QueueBind
-	queueDelete         []args.QueueDelete
-	queueUnbind         []args.QueueUnbind
+	queueDeclare        []QueueDeclare
+	queueDeclarePassive []QueueDeclarePassive
+	queueBind           []QueueBind
+	queueDelete         []QueueDelete
+	queueUnbind         []QueueUnbind
 
 	currentTime *time.Time
 	lastTime    *time.Time

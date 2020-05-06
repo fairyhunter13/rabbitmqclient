@@ -1,9 +1,7 @@
 package rabbitmqclient
 
-import "github.com/fairyhunter13/rabbitmqclient/args"
-
 // AddExchangeDeclare add the exchange declare args to the topology.
-func (t *Topology) AddExchangeDeclare(arg args.ExchangeDeclare) *Topology {
+func (t *Topology) AddExchangeDeclare(arg ExchangeDeclare) *Topology {
 	t.mutex.Lock()
 	t.exchangeDeclare = append(t.exchangeDeclare, arg)
 	t.mutex.Unlock()
@@ -12,7 +10,7 @@ func (t *Topology) AddExchangeDeclare(arg args.ExchangeDeclare) *Topology {
 }
 
 // AddExchangeDeclarePassive adds the exchange declare if it is not available.
-func (t *Topology) AddExchangeDeclarePassive(arg args.ExchangeDeclarePassive) *Topology {
+func (t *Topology) AddExchangeDeclarePassive(arg ExchangeDeclarePassive) *Topology {
 	t.mutex.Lock()
 	t.exchangeDeclarePassive = append(t.exchangeDeclarePassive, arg)
 	t.mutex.Unlock()
@@ -21,7 +19,7 @@ func (t *Topology) AddExchangeDeclarePassive(arg args.ExchangeDeclarePassive) *T
 }
 
 // AddExchangeBind adds the exchange bind to the topology.
-func (t *Topology) AddExchangeBind(arg args.ExchangeBind) *Topology {
+func (t *Topology) AddExchangeBind(arg ExchangeBind) *Topology {
 	t.mutex.Lock()
 	t.exchangeBind = append(t.exchangeBind, arg)
 	t.mutex.Unlock()
@@ -30,7 +28,7 @@ func (t *Topology) AddExchangeBind(arg args.ExchangeBind) *Topology {
 }
 
 // AddExchangeUnbind adds the exchange unbind to the topology.
-func (t *Topology) AddExchangeUnbind(arg args.ExchangeUnbind) *Topology {
+func (t *Topology) AddExchangeUnbind(arg ExchangeUnbind) *Topology {
 	t.mutex.Lock()
 	t.exchangeUnbind = append(t.exchangeUnbind, arg)
 	t.mutex.Unlock()
@@ -39,7 +37,7 @@ func (t *Topology) AddExchangeUnbind(arg args.ExchangeUnbind) *Topology {
 }
 
 // AddExchangeDelete adds the exchange delete to the topology.
-func (t *Topology) AddExchangeDelete(arg args.ExchangeDelete) *Topology {
+func (t *Topology) AddExchangeDelete(arg ExchangeDelete) *Topology {
 	t.mutex.Lock()
 	t.exchangeDelete = append(t.exchangeDelete, arg)
 	t.mutex.Unlock()
@@ -48,7 +46,7 @@ func (t *Topology) AddExchangeDelete(arg args.ExchangeDelete) *Topology {
 }
 
 // AddQueueDeclare adds the queue declaration into the topology
-func (t *Topology) AddQueueDeclare(arg args.QueueDeclare) *Topology {
+func (t *Topology) AddQueueDeclare(arg QueueDeclare) *Topology {
 	t.mutex.Lock()
 	t.queueDeclare = append(t.queueDeclare, arg)
 	t.mutex.Unlock()
@@ -57,7 +55,7 @@ func (t *Topology) AddQueueDeclare(arg args.QueueDeclare) *Topology {
 }
 
 // AddQueueDeclarePassive adds the queue passive declaration into the topology
-func (t *Topology) AddQueueDeclarePassive(arg args.QueueDeclarePassive) *Topology {
+func (t *Topology) AddQueueDeclarePassive(arg QueueDeclarePassive) *Topology {
 	t.mutex.Lock()
 	t.queueDeclarePassive = append(t.queueDeclarePassive, arg)
 	t.mutex.Unlock()
@@ -66,7 +64,7 @@ func (t *Topology) AddQueueDeclarePassive(arg args.QueueDeclarePassive) *Topolog
 }
 
 // AddQueueBind adds the queue bind args to the topology
-func (t *Topology) AddQueueBind(arg args.QueueBind) *Topology {
+func (t *Topology) AddQueueBind(arg QueueBind) *Topology {
 	t.mutex.Lock()
 	t.queueBind = append(t.queueBind, arg)
 	t.mutex.Unlock()
@@ -75,7 +73,7 @@ func (t *Topology) AddQueueBind(arg args.QueueBind) *Topology {
 }
 
 // AddQueueUnbind adds the queue unbind args to the topology
-func (t *Topology) AddQueueUnbind(arg args.QueueUnbind) *Topology {
+func (t *Topology) AddQueueUnbind(arg QueueUnbind) *Topology {
 	t.mutex.Lock()
 	t.queueUnbind = append(t.queueUnbind, arg)
 	t.mutex.Unlock()
@@ -84,7 +82,7 @@ func (t *Topology) AddQueueUnbind(arg args.QueueUnbind) *Topology {
 }
 
 // AddQueueDelete adds the queue delete args to the topology
-func (t *Topology) AddQueueDelete(arg args.QueueDelete) *Topology {
+func (t *Topology) AddQueueDelete(arg QueueDelete) *Topology {
 	t.mutex.Lock()
 	t.queueDelete = append(t.queueDelete, arg)
 	t.mutex.Unlock()
