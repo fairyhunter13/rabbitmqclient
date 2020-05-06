@@ -11,21 +11,19 @@ import (
 	"github.com/streadway/amqp"
 )
 
-// PublisherManager manages all the publisher for the Container.
-type PublisherManager struct {
+type publisherManager struct {
 	conn           amqpwrapper.IConnectionManager
 	channelCounter uint64
 	idleChannels   chan uint64
 }
 
-func newPublisherManager(conn amqpwrapper.IConnectionManager) (res *PublisherManager) {
-	res = new(PublisherManager)
+func newPublisherManager(conn amqpwrapper.IConnectionManager) (res *publisherManager) {
+	res = new(publisherManager)
 	res.idleChannels = make(chan uint64)
 	return
 }
 
-// Publish publishes the message with current arguments.
-func (pm *PublisherManager) Publish(arg args.Publish) (err error) {
+func (pm *publisherManager) publish(arg args.Publish) (err error) {
 	var (
 		idChannel uint64
 		isNew     bool
@@ -43,11 +41,11 @@ func (pm *PublisherManager) Publish(arg args.Publish) (err error) {
 	default:
 		isNew = true
 	}
-	err = pm.publish(idChannel, arg, isNew)
+	err = pm.publishWithChannel(idChannel, arg, isNew)
 	return
 }
 
-func (pm *PublisherManager) publish(idChan uint64, arg args.Publish, isNew bool) (err error) {
+func (pm *publisherManager) publishWithChannel(idChan uint64, arg args.Publish, isNew bool) (err error) {
 	var (
 		ch *amqp.Channel
 	)
@@ -60,7 +58,7 @@ func (pm *PublisherManager) publish(idChan uint64, arg args.Publish, isNew bool)
 	return
 }
 
-func (pm *PublisherManager) getChannel(idChan uint64, isNew bool) (ch *amqp.Channel, err error) {
+func (pm *publisherManager) getChannel(idChan uint64, isNew bool) (ch *amqp.Channel, err error) {
 	var (
 		keyChannel string
 	)
