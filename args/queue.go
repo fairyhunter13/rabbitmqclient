@@ -25,6 +25,11 @@ func (q *QueueDeclare) Default() *QueueDeclare {
 	return q
 }
 
+// QueueDeclarePassive declares the queue if it isn't already declared
+type QueueDeclarePassive struct {
+	QueueDeclare
+}
+
 // QueueBind specifies the arguments to declare binding of queue to exchange.
 type QueueBind struct {
 	Name     string
@@ -41,4 +46,20 @@ func (q *QueueBind) Default() *QueueBind {
 	q.Exchange = generator.GenerateExchangeName(true, constant.TypeDirect)
 	q.NoWait = false
 	return q
+}
+
+// QueueDelete deletes deletes the bindings, purges the queue, and remove it from the server.
+type QueueDelete struct {
+	Name     string
+	IfUnused bool
+	IfEmpty  bool
+	NoWait   bool
+}
+
+// QueueUnbind removes the bindings of the queue to an exchange.
+type QueueUnbind struct {
+	Name     string
+	Key      string
+	Exchange string
+	args     amqp.Table
 }
