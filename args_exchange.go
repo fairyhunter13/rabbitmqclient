@@ -1,8 +1,6 @@
-package args
+package rabbitmqclient
 
 import (
-	"github.com/fairyhunter13/rabbitmqclient/constant"
-	"github.com/fairyhunter13/rabbitmqclient/generator"
 	"github.com/streadway/amqp"
 )
 
@@ -19,8 +17,8 @@ type ExchangeDeclare struct {
 
 // Default sets the default values of the struct variables.
 func (e *ExchangeDeclare) Default() *ExchangeDeclare {
-	e.Name = generator.GenerateExchangeName(true, constant.TypeDirect)
-	e.Kind = constant.TypeDirect
+	e.Name = generateExchangeName(true, TypeDirect)
+	e.Kind = TypeDirect
 	e.Durable = true
 	e.AutoDelete = true
 	e.Internal = false

@@ -5,9 +5,6 @@ import (
 	"sync/atomic"
 
 	"github.com/fairyhunter13/amqpwrapper"
-	"github.com/fairyhunter13/rabbitmqclient/args"
-	"github.com/fairyhunter13/rabbitmqclient/constant"
-	"github.com/fairyhunter13/rabbitmqclient/generator"
 	"github.com/streadway/amqp"
 )
 
@@ -23,7 +20,7 @@ func newPublisherManager(conn amqpwrapper.IConnectionManager) (res *publisherMan
 	return
 }
 
-func (pm *publisherManager) publish(arg args.Publish) (err error) {
+func (pm *publisherManager) publish(arg Publish) (err error) {
 	var (
 		idChannel uint64
 		isNew     bool
@@ -45,7 +42,7 @@ func (pm *publisherManager) publish(arg args.Publish) (err error) {
 	return
 }
 
-func (pm *publisherManager) publishWithChannel(idChan uint64, arg args.Publish, isNew bool) (err error) {
+func (pm *publisherManager) publishWithChannel(idChan uint64, arg Publish, isNew bool) (err error) {
 	var (
 		ch *amqp.Channel
 	)
@@ -66,14 +63,14 @@ func (pm *publisherManager) getChannel(idChan uint64, isNew bool) (ch *amqp.Chan
 		idChan = atomic.LoadUint64(&pm.channelCounter)
 		atomic.AddUint64(&pm.channelCounter, 1)
 	}
-	keyChannel = fmt.Sprintf(constant.DefaultKeyProducer, idChan)
+	keyChannel = fmt.Sprintf(DefaultKeyProducer, idChan)
 	if isNew {
-		ch, err = pm.conn.InitChannelAndGet(generator.EmptyChannel, amqpwrapper.InitArgs{
+		ch, err = pm.conn.InitChannelAndGet(EmptyChannel, amqpwrapper.InitArgs{
 			Key:      keyChannel,
-			TypeChan: constant.DefaultTypeProducer,
+			TypeChan: DefaultTypeProducer,
 		})
 	} else {
-		ch, err = pm.conn.GetChannel(keyChannel, constant.DefaultTypeProducer)
+		ch, err = pm.conn.GetChannel(keyChannel, DefaultTypeProducer)
 	}
 	return
 }

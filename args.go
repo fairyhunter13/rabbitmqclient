@@ -1,7 +1,6 @@
-package args
+package rabbitmqclient
 
 import (
-	"github.com/fairyhunter13/rabbitmqclient/constant"
 	"github.com/streadway/amqp"
 )
 
@@ -37,7 +36,7 @@ func (op *OtherPublish) SetContentEncoding(contentEncoding string) *OtherPublish
 
 // SetPersistent sets the delivery mode to persistent.
 func (op *OtherPublish) SetPersistent() *OtherPublish {
-	op.Msg.DeliveryMode = constant.DelvieryModePersistent
+	op.Msg.DeliveryMode = DelvieryModePersistent
 	return op
 }
 

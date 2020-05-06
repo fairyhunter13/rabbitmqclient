@@ -2,7 +2,6 @@ package rabbitmqclient
 
 import (
 	"github.com/fairyhunter13/amqpwrapper"
-	"github.com/fairyhunter13/rabbitmqclient/constant"
 )
 
 type initiator struct {
@@ -21,9 +20,9 @@ func (i *initiator) init(topo *Topology) (err error) {
 		return
 	}
 	args := amqpwrapper.InitArgs{
-		Key:      constant.DefaultKeyInitiator,
-		TypeChan: constant.DefaultTypeProducer,
+		Key:      DefaultKeyInitiator,
+		TypeChan: DefaultTypeProducer,
 	}
-	i.conn.InitChannelAndGet()
+	_, err = i.conn.InitChannelAndGet(TopologyInitializationChannel(topo), args)
 	return
 }

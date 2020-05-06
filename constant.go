@@ -1,6 +1,12 @@
-package constant
+package rabbitmqclient
 
 import "github.com/fairyhunter13/amqpwrapper"
+
+// List of all uint constants for boolean
+const (
+	FalseUint uint64 = iota
+	TrueUint
+)
 
 // List of default config used for this library.
 const (
@@ -24,4 +30,10 @@ const (
 	TypeFanout  = `fanout`
 	TypeTopic   = `topic`
 	TypeHeaders = `headers`
+)
+
+// List of all delivery modes for amqp rabbitmqclient
+const (
+	DeliveryModeTransient  = 1
+	DelvieryModePersistent = 2
 )
