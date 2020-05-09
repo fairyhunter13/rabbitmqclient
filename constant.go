@@ -37,3 +37,17 @@ const (
 	DeliveryModeTransient  = 1
 	DelvieryModePersistent = 2
 )
+
+// List of all topology constants
+const (
+	TopologyExchangeDeclare        = `ExchangeDeclare`
+	TopologyExchangeDeclarePassive = `ExchangeDeclarePassive`
+	TopologyExchangeBind           = `ExchangeBind`
+	TopologyExchangeUnbind         = `ExchangeUnbind`
+	TopologyExchangeDelete         = `ExchangeDelete`
+	TopologyQueueDeclare           = `QueueDeclare`
+	TopologyQueueDeclarePassive    = `QueueDeclarePassive`
+	TopologyQueueBind              = `QueueBind`
+	TopologyQueueUnbind            = `QueueUnbind`
+	TopologyQueueDelete            = `QueueDelete`
+)
