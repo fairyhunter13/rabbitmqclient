@@ -11,6 +11,7 @@ type QueueDeclare struct {
 	AutoDelete bool
 	Exclusive  bool
 	NoWait     bool
+	Args       amqp.Table
 }
 
 // Default sets the default values of the struct variables.
@@ -20,6 +21,7 @@ func (q *QueueDeclare) Default() *QueueDeclare {
 	q.AutoDelete = false
 	q.Exclusive = false
 	q.NoWait = false
+	q.Args = amqp.Table{}
 	return q
 }
 
@@ -59,5 +61,5 @@ type QueueUnbind struct {
 	Name     string
 	Key      string
 	Exchange string
-	args     amqp.Table
+	Args     amqp.Table
 }
