@@ -36,10 +36,7 @@ func NewContainer(conn amqpwrapper.IConnectionManager) (res *Container, err erro
 
 // Publish publishes the message to the default exchange with the default topic.
 func (c *Container) Publish(exchange, topic string, arg OtherPublish) (err error) {
-	if !c.isSaved() {
-		err = ErrContainerMustBeSavedFirst
-		return
-	}
+	c.Save()
 	if exchange == "" {
 		exchange = c.GetGlobalExchange().Name
 	}
