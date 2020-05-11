@@ -1,5 +1,13 @@
 package rabbitmqclient
 
+func (c *Container) setDefaultTopology() {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+	if c.Topology == nil {
+		c.Topology = NewTopology()
+	}
+}
+
 // SetTopology sets the current topology of this container.
 func (c *Container) SetTopology(topo *Topology) *Container {
 	c.setDefaultTopology()
@@ -17,6 +25,6 @@ func (c *Container) Init() (err error) {
 	if !c.Topology.IsUpdated() {
 		return
 	}
-	err = c.Initiator.init(c.Topology)
+	err = c.initiator.init(c.Topology)
 	return
 }

@@ -2,7 +2,6 @@ package rabbitmqclient
 
 import (
 	"sync"
-	"sync/atomic"
 
 	"github.com/fairyhunter13/amqpwrapper"
 )
@@ -10,13 +9,12 @@ import (
 // Container is the struct to make custom Publisher and Consumer.
 type Container struct {
 	publisherManager *publisherManager
-	Initiator        *initiator
-	*Topology
+	initiator        *initiator
+	*globalExchange
+	*saver
 	mutex *sync.RWMutex
-	// Mutex protects the following fields
-	globalExchange *ExchangeDeclare
-
-	savedStatus uint64
+	// mutex protects the following fields
+	*Topology
 }
 
 // NewContainer return the container of the connection manager for amqp.Wrapper
@@ -27,10 +25,12 @@ func NewContainer(conn amqpwrapper.IConnectionManager) (res *Container, err erro
 	}
 	res = &Container{
 		publisherManager: newPublisherManager(conn),
-		Initiator:        newInitiator(conn),
+		initiator:        newInitiator(conn),
+		globalExchange:   newGlobalExchange(),
 		mutex:            new(sync.RWMutex),
 		Topology:         NewTopology(),
 	}
+	res.saver = newSaver(res.topo, res.globalExchange)
 	return
 }
 
@@ -41,9 +41,7 @@ func (c *Container) Publish(exchange, topic string, arg OtherPublish) (err error
 		return
 	}
 	if exchange == "" {
-		c.mutex.RLock()
-		exchange = c.globalExchange.Name
-		c.mutex.RUnlock()
+		exchange = c.GetGlobalExchange().Name
 	}
 	if topic == "" {
 		topic = DefaultTopic
@@ -60,47 +58,4 @@ func (c *Container) Publish(exchange, topic string, arg OtherPublish) (err error
 		},
 	)
 	return
-}
-
-// SetExchange sets the exchange of this container.
-func (c *Container) SetExchange(exc *ExchangeDeclare) *Container {
-	c.setDefaultExchange()
-	if exc != nil {
-		c.mutex.Lock()
-		c.globalExchange = exc
-		c.mutex.Unlock()
-	}
-	return c
-}
-
-// SetExchangeName sets the exchange name of all publishers and consumers
-func (c *Container) SetExchangeName(name string) *Container {
-	c.setDefaultExchange()
-	if name != "" {
-		c.mutex.Lock()
-		c.globalExchange.Name = name
-		c.mutex.Unlock()
-	}
-	return c
-}
-
-// Save saves the current global exchange of the container.
-// Save must be called before calling Publish or Consume function.
-func (c *Container) Save() *Container {
-	if !c.isSaved() {
-		c.setDefaultExchange()
-		c.mutex.RLock()
-		c.AddExchangeDeclare(*c.globalExchange)
-		c.mutex.RUnlock()
-		c.save()
-	}
-	return c
-}
-
-func (c *Container) save() {
-	atomic.StoreUint64(&c.savedStatus, TrueUint)
-}
-
-func (c *Container) isSaved() bool {
-	return atomic.LoadUint64(&c.savedStatus) == TrueUint
 }
