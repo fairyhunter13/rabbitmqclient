@@ -127,7 +127,7 @@ func (t *Topology) iterateDeclare(ch *amqp.Channel, list interface{}) (err error
 	switch val.Kind() {
 	case reflect.Slice, reflect.Array:
 		for i := 0; i < val.Len(); i++ {
-			err = t.declare(ch, val.Index(i))
+			err = t.declare(ch, val.Index(i).Interface())
 			if err != nil {
 				return
 			}

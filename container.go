@@ -27,10 +27,10 @@ func NewContainer(conn amqpwrapper.IConnectionManager) (res *Container, err erro
 		publisherManager: newPublisherManager(conn),
 		initiator:        newInitiator(conn),
 		globalExchange:   newGlobalExchange(),
+		saver:            newSaver(),
 		mutex:            new(sync.RWMutex),
 		Topology:         NewTopology(),
 	}
-	res.saver = newSaver(res.topo, res.globalExchange)
 	return
 }
 
@@ -58,4 +58,13 @@ func (c *Container) Publish(exchange, topic string, arg OtherPublish) (err error
 		},
 	)
 	return
+}
+
+// Save saves the current global exchange of the saver implementator.
+func (c *Container) Save() *Container {
+	if !c.isSaved() {
+		c.AddExchangeDeclare(*c.GetGlobalExchange())
+		c.save()
+	}
+	return c
 }
