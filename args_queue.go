@@ -48,18 +48,18 @@ func (q *QueueBind) Default() *QueueBind {
 	return q
 }
 
-// QueueDelete deletes deletes the bindings, purges the queue, and remove it from the server.
-type QueueDelete struct {
-	Name     string
-	IfUnused bool
-	IfEmpty  bool
-	NoWait   bool
-}
-
 // QueueUnbind removes the bindings of the queue to an exchange.
 type QueueUnbind struct {
 	Name     string
 	Key      string
 	Exchange string
 	Args     amqp.Table
+}
+
+// QueueDelete deletes deletes the bindings, purges the queue, and remove it from the server.
+type QueueDelete struct {
+	Name     string
+	IfUnused bool
+	IfEmpty  bool
+	NoWait   bool
 }
