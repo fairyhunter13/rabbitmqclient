@@ -17,7 +17,7 @@ type ExchangeDeclare struct {
 
 // Default sets the default values of the struct variables.
 func (e *ExchangeDeclare) Default() *ExchangeDeclare {
-	e.Name = generateExchangeName(true, TypeDirect)
+	e.Name = DefaultExchange
 	e.Kind = TypeDirect
 	e.Durable = true
 	e.AutoDelete = true

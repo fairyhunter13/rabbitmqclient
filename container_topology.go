@@ -1,16 +1,7 @@
 package rabbitmqclient
 
-func (c *Container) setDefaultTopology() {
-	c.mutex.Lock()
-	defer c.mutex.Unlock()
-	if c.Topology == nil {
-		c.Topology = NewTopology()
-	}
-}
-
 // SetTopology sets the current topology of this container.
 func (c *Container) SetTopology(topo *Topology) *Container {
-	c.setDefaultTopology()
 	if topo != nil {
 		c.mutex.Lock()
 		c.Topology = topo
