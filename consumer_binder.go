@@ -33,6 +33,7 @@ func (c *Consumer) SetTopic(topic string) *Consumer {
 		c.mutex.Lock()
 		c.bind.Key = topic
 		c.mutex.Unlock()
+		c.SetQueueName(true, "")
 	}
 	return c
 }

@@ -10,7 +10,9 @@ import (
 type Container struct {
 	publisherManager *publisherManager
 	initiator        *initiator
+	conn             amqpwrapper.IConnectionManager
 	*saver
+
 	mutex *sync.RWMutex
 	// mutex protects the following fields
 	exchange *ExchangeDeclare
@@ -26,12 +28,18 @@ func NewContainer(conn amqpwrapper.IConnectionManager) (res *Container, err erro
 	res = &Container{
 		publisherManager: newPublisherManager(conn),
 		initiator:        newInitiator(conn),
+		conn:             conn,
 		saver:            newSaver(),
 		mutex:            new(sync.RWMutex),
 		exchange:         new(ExchangeDeclare).Default(),
 		Topology:         NewTopology(),
 	}
 	return
+}
+
+// GetConnection return the underlying connection manager
+func (c *Container) GetConnection() amqpwrapper.IConnectionManager {
+	return c.conn
 }
 
 // Publish publishes the message to the default exchange with the default topic.
@@ -55,6 +63,12 @@ func (c *Container) Publish(exchange, topic string, arg OtherPublish) (err error
 		},
 	)
 	return
+}
+
+// Consume creates a new consumer.
+func (c *Container) Consume() *Consumer {
+	c.Save()
+	return newConsumer(c)
 }
 
 // Save saves the current global exchange of the saver implementator.
