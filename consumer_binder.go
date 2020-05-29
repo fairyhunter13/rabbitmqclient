@@ -1,6 +1,8 @@
 package rabbitmqclient
 
 // SetQueueName sets the queue name of the consumer.
+// Call SetQueueName after you call the SetTopic method
+// in order to prevent the override of the queue name.
 func (c *Consumer) SetQueueName(withPrefix bool, name string) *Consumer {
 	var newQueueName string
 	if name != "" {
@@ -28,6 +30,8 @@ func (c *Consumer) SetExchangeName(name string) *Consumer {
 }
 
 // SetTopic sets the topic of the queue to the exchange.
+// Call SetTopic before you call the SetQueueName method
+// in order not to override the current queue name.
 func (c *Consumer) SetTopic(topic string) *Consumer {
 	if topic != "" {
 		c.mutex.Lock()
