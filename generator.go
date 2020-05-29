@@ -1,8 +1,6 @@
 package rabbitmqclient
 
 import (
-	"fmt"
-
 	"github.com/fairyhunter13/amqpwrapper"
 	"github.com/streadway/amqp"
 )
@@ -27,7 +25,14 @@ var (
 
 func generateExchangeName(isPrefix bool, name string) string {
 	if isPrefix {
-		return fmt.Sprintf("%s%s", DefaultPrefixExchange, name)
+		return DefaultPrefixExchange + name
+	}
+	return name
+}
+
+func generateQueueName(isPrefix bool, name string) string {
+	if isPrefix {
+		return DefaultPrefixQueue + name
 	}
 	return name
 }

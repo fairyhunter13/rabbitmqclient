@@ -10,9 +10,17 @@ const (
 
 // List of default config used for this library.
 const (
+	// prefixes
 	DefaultPrefixExchange = "amqp."
-	DefaultQueue          = "default"
-	DefaultTopic          = "default"
+	DefaultPrefixQueue    = "queue."
+
+	DefaultQueue = "default"
+	DefaultTopic = "default"
+)
+
+// List of default variable configuration for this library
+var (
+	DefaultExchange = generateExchangeName(true, TypeDirect)
 )
 
 const (

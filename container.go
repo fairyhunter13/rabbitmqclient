@@ -10,10 +10,10 @@ import (
 type Container struct {
 	publisherManager *publisherManager
 	initiator        *initiator
-	*globalExchange
 	*saver
 	mutex *sync.RWMutex
 	// mutex protects the following fields
+	exchange *ExchangeDeclare
 	*Topology
 }
 
@@ -26,9 +26,9 @@ func NewContainer(conn amqpwrapper.IConnectionManager) (res *Container, err erro
 	res = &Container{
 		publisherManager: newPublisherManager(conn),
 		initiator:        newInitiator(conn),
-		globalExchange:   newGlobalExchange(),
 		saver:            newSaver(),
 		mutex:            new(sync.RWMutex),
+		exchange:         new(ExchangeDeclare).Default(),
 		Topology:         NewTopology(),
 	}
 	return

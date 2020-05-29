@@ -43,7 +43,7 @@ type QueueBind struct {
 func (q *QueueBind) Default() *QueueBind {
 	q.Name = DefaultQueue
 	q.Key = DefaultTopic
-	q.Exchange = generateExchangeName(true, TypeDirect)
+	q.Exchange = DefaultExchange
 	q.NoWait = false
 	return q
 }
