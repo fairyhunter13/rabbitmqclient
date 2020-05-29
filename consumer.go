@@ -1,6 +1,10 @@
 package rabbitmqclient
 
-import "sync"
+import (
+	"sync"
+
+	"github.com/streadway/amqp"
+)
 
 // Consumer defines the behavior class for the consumer
 type Consumer struct {
@@ -12,6 +16,9 @@ type Consumer struct {
 	bind    *QueueBind
 }
 
+// Handler defines the handler type for this rabbitmqclient
+type Handler func(ch *amqp.Channel, msg amqp.Delivery)
+
 func newConsumer(container *Container) *Consumer {
 	return &Consumer{
 		container: container,
@@ -20,6 +27,11 @@ func newConsumer(container *Container) *Consumer {
 		bind:      new(QueueBind).Default(),
 		saver:     newSaver(),
 	}
+}
+
+// Consume consumes the message using the number of workers and handler passed.
+func (c *Consumer) Consume(workers uint64, handler Handler) (err error) {
+	return
 }
 
 // Save saves the consumer state.
