@@ -25,8 +25,8 @@ func newConsumer(container *Container) *Consumer {
 // Save saves the consumer state.
 func (c *Consumer) Save() *Consumer {
 	if !c.isSaved() {
-		c.container.AddQueueDeclare(*c.declare)
-		c.container.AddQueueBind(*c.bind)
+		c.container.AddQueueDeclare(*c.GetQueueDeclare())
+		c.container.AddQueueBind(*c.GetQueueBind())
 		c.save()
 	}
 	return c
