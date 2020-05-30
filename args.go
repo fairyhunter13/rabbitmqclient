@@ -95,3 +95,11 @@ func (c *Consume) SetAutoAck() *Consume {
 	c.AutoAck = true
 	return c
 }
+
+// SetArgs sets the args of the consume function in amqp.
+func (c *Consume) SetArgs(args amqp.Table) *Consume {
+	if args != nil {
+		c.Args = args
+	}
+	return c
+}

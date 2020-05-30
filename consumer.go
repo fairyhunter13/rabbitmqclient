@@ -11,10 +11,12 @@ import (
 type Consumer struct {
 	container *Container
 	*saver
+
 	mutex *sync.RWMutex
 	// mutex protects the following fields
 	declare    *QueueDeclare
 	bind       *QueueBind
+	consume    *Consume
 	channelKey string
 }
 
@@ -24,16 +26,13 @@ type Handler func(ch *amqp.Channel, msg amqp.Delivery)
 func newConsumer(container *Container) *Consumer {
 	return &Consumer{
 		container:  container,
+		saver:      newSaver(),
 		mutex:      new(sync.RWMutex),
 		declare:    new(QueueDeclare).Default(),
 		bind:       new(QueueBind).Default(),
-		saver:      newSaver(),
+		consume:    new(Consume),
 		channelKey: DefaultChannelKey,
 	}
-}
-
-func (c *Consumer) getContainer() *Container {
-	return c.container
 }
 
 // Consume consumes the message using the number of workers and handler passed.
@@ -50,21 +49,11 @@ func (c *Consumer) Consume(workers int, handler Handler) (err error) {
 	if err != nil {
 		return
 	}
-	var ch *amqp.Channel
-	ch, err = c.initChannel(workers)
+	err = c.initChannelManager(workers)
 	if err != nil {
 		return
 	}
-
-	return
-}
-
-func (c *Consumer) initChannel(workers int) (ch *amqp.Channel, err error) {
-	args := amqpwrapper.InitArgs{
-		Key:      c.getChannelKey(),
-		TypeChan: DefaultTypeConsumer,
-	}
-	ch, err = c.getContainer().GetConnection().InitChannelAndGet(QosSetterFn(workers), args)
+	go c.runConsumers(workers, *c.getConsume(), handler)
 	return
 }
 
@@ -76,4 +65,53 @@ func (c *Consumer) Save() *Consumer {
 		c.save()
 	}
 	return c
+}
+
+func (c *Consumer) initChannelManager(workers int) (err error) {
+	_, err = c.getContainer().GetConnection().InitChannelAndGet(
+		QosSetterFn(workers),
+		amqpwrapper.InitArgs{
+			Key:      c.getChannelKey(),
+			TypeChan: DefaultTypeConsumer,
+		},
+	)
+	return
+}
+
+func (c *Consumer) runConsumers(workers int, consumeArgs Consume, handler Handler) {
+	consumeArgs.SetQueue(c.getQueue())
+	if workers == 1 {
+		consumeArgs.SetOnlyOneConsumer()
+	}
+	for numWorker := 1; numWorker <= workers; numWorker++ {
+		go c.loopMessage(consumeArgs, handler)
+	}
+}
+
+func (c *Consumer) loopMessage(args Consume, handler Handler) {
+	for {
+		connection := c.getContainer().GetConnection()
+		if connection.IsClosed() {
+			return
+		}
+		ch, err := connection.GetChannel(c.getChannelKey(), DefaultTypeConsumer)
+		if err != nil {
+			return
+		}
+		deliveryCh, err := ch.Consume(
+			args.Queue,
+			args.Consumer,
+			args.AutoAck,
+			args.Exclusive,
+			args.NoLocal,
+			args.NoWait,
+			args.Args,
+		)
+		if err != nil {
+			continue
+		}
+		for msg := range deliveryCh {
+			handler(ch, msg)
+		}
+	}
 }
