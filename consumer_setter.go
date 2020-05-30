@@ -52,6 +52,17 @@ func (c *Consumer) SetTopic(topic string) *Consumer {
 	return c
 }
 
+// SetConsume sets the consume args for consumer.
+// The args list can be seen inside the amqp documentation.
+func (c *Consumer) SetConsume(consume *Consume) *Consumer {
+	if consume != nil {
+		c.mutex.Lock()
+		c.consume = consume
+		c.mutex.Unlock()
+	}
+	return c
+}
+
 // SetQueueDeclare sets the queue declaration topology for this Consumer.
 func (c *Consumer) SetQueueDeclare(declare *QueueDeclare) *Consumer {
 	if declare != nil {
