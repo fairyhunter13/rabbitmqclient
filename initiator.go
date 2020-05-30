@@ -23,6 +23,6 @@ func (i *initiator) init(topo *Topology) (err error) {
 		Key:      DefaultKeyInitiator,
 		TypeChan: DefaultTypeProducer,
 	}
-	_, err = i.conn.InitChannelAndGet(TopologyInitializationChannel(topo), args)
+	_, err = i.conn.InitChannelAndGet(TopologyInitializationFn(topo), args)
 	return
 }

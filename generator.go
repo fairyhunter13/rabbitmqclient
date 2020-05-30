@@ -6,12 +6,12 @@ import (
 )
 
 var (
-	// EmptyChannel specifies the empty channel for initializing rabbitmq channel.
-	EmptyChannel = func(ch *amqp.Channel) (err error) {
+	// EmptyFn specifies the empty function for initializing rabbitmq channel.
+	EmptyFn = func(ch *amqp.Channel) (err error) {
 		return
 	}
-	// TopologyInitializationChannel is a channel function initialize all declarations inside the passed topology.
-	TopologyInitializationChannel = func(topo *Topology) (result amqpwrapper.InitializeChannel) {
+	// TopologyInitializationFn is a function to initialize all declarations inside the passed topology.
+	TopologyInitializationFn = func(topo *Topology) (result amqpwrapper.InitializeChannel) {
 		result = func(ch *amqp.Channel) (err error) {
 			if topo == nil {
 				return
@@ -21,18 +21,40 @@ var (
 		}
 		return
 	}
+	// QosSetterFn declares the quality of service inside the channel for consumers.
+	QosSetterFn = func(workers int) (result amqpwrapper.InitializeChannel) {
+		result = func(ch *amqp.Channel) (err error) {
+			if workers <= 0 {
+				workers = 1
+			}
+			err = ch.Qos(workers, 0, false)
+			return
+		}
+		return
+	}
 )
 
-func generateExchangeName(isPrefix bool, name string) string {
+// GenerateExchangeName creates an exchange name with default prefix if isPrefix is true.
+func GenerateExchangeName(isPrefix bool, name string) string {
 	if isPrefix {
 		return DefaultPrefixExchange + name
 	}
 	return name
 }
 
-func generateQueueName(isPrefix bool, name string) string {
+// GenerateQueueName creates a queue name with default prefix if isPrefix is true.
+func GenerateQueueName(isPrefix bool, name string) string {
 	if isPrefix {
 		return DefaultPrefixQueue + name
+	}
+	return name
+}
+
+// GenerateConsumerChannelKey creates a consumer key for the channel to keeping track inside the IConnectionManager
+// with default prefix if isPrefix is true.
+func GenerateConsumerChannelKey(isPrefix bool, name string) string {
+	if isPrefix {
+		return DefaultPrefixConsumer + name
 	}
 	return name
 }

@@ -13,14 +13,16 @@ const (
 	// prefixes
 	DefaultPrefixExchange = "amqp."
 	DefaultPrefixQueue    = "queue."
+	DefaultPrefixConsumer = "consumer."
 
-	DefaultQueue = "default"
-	DefaultTopic = "default"
+	DefaultQueue      = "default"
+	DefaultTopic      = "default"
+	DefaultChannelKey = "default"
 )
 
 // List of default variable configuration for this library
 var (
-	DefaultExchange = generateExchangeName(true, TypeDirect)
+	DefaultExchange = GenerateExchangeName(true, TypeDirect)
 )
 
 const (
@@ -28,8 +30,14 @@ const (
 	DefaultKeyInitiator = "initiator"
 	// DefaultKeyProducer specifies the key channel for producer.
 	DefaultKeyProducer = "producer.%d"
+)
+
+// List of channel types for amqpwrapper
+const (
 	// DefaultTypeProducer specifies the default type of channel for the amqpwrapper.
 	DefaultTypeProducer = amqpwrapper.Producer
+	// DefaultTypeConsumer specifies the default type of channel for the amqpwrapper.
+	DefaultTypeConsumer = amqpwrapper.Consumer
 )
 
 // List of all exchange type in rabbitmq

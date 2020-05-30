@@ -4,17 +4,26 @@ package rabbitmqclient
 // Call SetQueueName after you call the SetTopic method
 // in order to prevent the override of the queue name.
 func (c *Consumer) SetQueueName(withPrefix bool, name string) *Consumer {
-	var newQueueName string
-	if name != "" {
-		newQueueName = generateQueueName(withPrefix, name)
-	} else {
-		c.mutex.RLock()
-		newQueueName = generateQueueName(withPrefix, c.bind.Key)
-		c.mutex.RUnlock()
+	if name == "" {
+		name = c.getTopic()
 	}
+	newQueueName := GenerateQueueName(withPrefix, name)
 	c.mutex.Lock()
 	c.declare.Name = newQueueName
 	c.bind.Name = newQueueName
+	c.mutex.Unlock()
+	return c
+}
+
+// SetChannelKey sets the channel key to keep track inside the IConnectionManager.
+// Call this function after you call the SetTopic method if you want to use
+// the default key for the channel key. The default key is the topic name.
+func (c *Consumer) SetChannelKey(withPrefix bool, name string) *Consumer {
+	if name == "" {
+		name = c.getTopic()
+	}
+	c.mutex.Lock()
+	c.channelKey = GenerateConsumerChannelKey(withPrefix, name)
 	c.mutex.Unlock()
 	return c
 }
@@ -38,6 +47,7 @@ func (c *Consumer) SetTopic(topic string) *Consumer {
 		c.bind.Key = topic
 		c.mutex.Unlock()
 		c.SetQueueName(true, "")
+		c.SetChannelKey(true, "")
 	}
 	return c
 }
@@ -60,18 +70,4 @@ func (c *Consumer) SetQueueBind(bind *QueueBind) *Consumer {
 		c.mutex.Unlock()
 	}
 	return c
-}
-
-// GetQueueDeclare get queue declaration for this consumer.
-func (c *Consumer) GetQueueDeclare() *QueueDeclare {
-	c.mutex.RLock()
-	defer c.mutex.RUnlock()
-	return c.declare
-}
-
-// GetQueueBind gets the queue binder for this consumer.
-func (c *Consumer) GetQueueBind() *QueueBind {
-	c.mutex.RLock()
-	defer c.mutex.RUnlock()
-	return c.bind
 }
