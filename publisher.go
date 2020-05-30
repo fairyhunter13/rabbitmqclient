@@ -17,6 +17,7 @@ type publisherManager struct {
 func newPublisherManager(conn amqpwrapper.IConnectionManager) (res *publisherManager) {
 	res = new(publisherManager)
 	res.idleChannels = make(chan uint64)
+	res.conn = conn
 	return
 }
 
