@@ -54,3 +54,44 @@ func (op *OtherPublish) SetHeaders(header amqp.Table) *OtherPublish {
 	}
 	return op
 }
+
+// Consume define the consume arguments of amqp.
+type Consume struct {
+	Queue     string
+	Consumer  string
+	AutoAck   bool
+	Exclusive bool
+	NoLocal   bool
+	NoWait    bool
+	Args      amqp.Table
+}
+
+// SetName sets the name of the consumer.
+func (c *Consume) SetName(name string) *Consume {
+	c.Consumer = name
+	return c
+}
+
+// SetOnlyOneConsumer sets the exclusive args of consume to true.
+// This makes the queue only have one consumer.
+func (c *Consume) SetOnlyOneConsumer() *Consume {
+	c.Exclusive = true
+	return c
+}
+
+// SetQueue sets the queue name of the consume arguments.
+func (c *Consume) SetQueue(name string) *Consume {
+	queueName := DefaultQueue
+	if name != "" {
+		queueName = name
+	}
+	c.Queue = queueName
+	return c
+}
+
+// SetAutoAck sets the auto ack to true for automatic acknowledgement.
+// For manual acknowledgement, don't call this function.
+func (c *Consume) SetAutoAck() *Consume {
+	c.AutoAck = true
+	return c
+}

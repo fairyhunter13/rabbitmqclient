@@ -65,8 +65,8 @@ func (c *Container) Publish(exchange, topic string, arg OtherPublish) (err error
 	return
 }
 
-// Consume creates a new consumer.
-func (c *Container) Consume() *Consumer {
+// Consumer creates a new consumer.
+func (c *Container) Consumer() *Consumer {
 	c.Save()
 	return newConsumer(c)
 }

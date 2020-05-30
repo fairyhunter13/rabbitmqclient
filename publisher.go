@@ -65,7 +65,7 @@ func (pm *publisherManager) getChannel(idChan uint64, isNew bool) (ch *amqp.Chan
 	}
 	keyChannel = fmt.Sprintf(DefaultKeyProducer, idChan)
 	if isNew {
-		ch, err = pm.conn.InitChannelAndGet(EmptyChannel, amqpwrapper.InitArgs{
+		ch, err = pm.conn.InitChannelAndGet(EmptyFn, amqpwrapper.InitArgs{
 			Key:      keyChannel,
 			TypeChan: DefaultTypeProducer,
 		})
