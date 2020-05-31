@@ -22,6 +22,7 @@ func TestPublishAndSubscribe(t *testing.T) {
 
 	var result string
 	testHandler := func(ch *amqp.Channel, msg amqp.Delivery) {
+		msg.Ack(true)
 		result = string(msg.Body)
 	}
 	err = container.Consumer().SetTopic("integration-test").Consume(1, testHandler)
