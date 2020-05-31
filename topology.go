@@ -25,8 +25,8 @@ type Topology struct {
 	queueDelete         []QueueDelete
 	queueUnbind         []QueueUnbind
 
-	currentTime *time.Time
-	lastTime    *time.Time
+	currentTime time.Time
+	lastTime    time.Time
 }
 
 // NewTopology creates a new topology
@@ -34,8 +34,8 @@ func NewTopology() *Topology {
 	now := time.Now()
 	topo := &Topology{
 		mutex:       new(sync.RWMutex),
-		currentTime: &now,
-		lastTime:    &now,
+		currentTime: now,
+		lastTime:    now,
 	}
 	topo.topoVal = reflect.ValueOf(topo)
 	return topo
@@ -44,7 +44,7 @@ func NewTopology() *Topology {
 func (t *Topology) update() *Topology {
 	t.mutex.Lock()
 	defer t.mutex.Unlock()
-	*t.currentTime = time.Now()
+	t.currentTime = time.Now()
 	return t
 }
 
@@ -57,7 +57,7 @@ func (t *Topology) syncTime() {
 func (t *Topology) IsUpdated() (result bool) {
 	t.mutex.Lock()
 	defer t.mutex.Unlock()
-	result = t.currentTime.After(*t.lastTime)
+	result = t.currentTime.After(t.lastTime)
 	if result {
 		t.syncTime()
 	}

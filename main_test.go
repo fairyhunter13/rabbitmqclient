@@ -50,7 +50,7 @@ var (
 
 func initTestSetup() {
 	testSetup = newTestSetup()
-	testSetup.InitConnection("localhost")
+	testSetup = testSetup.InitConnection("localhost")
 }
 
 func TestMain(m *testing.M) {

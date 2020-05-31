@@ -24,15 +24,16 @@ type Consumer struct {
 type Handler func(ch *amqp.Channel, msg amqp.Delivery)
 
 func newConsumer(container *Container) *Consumer {
-	return &Consumer{
+	consumer := &Consumer{
 		container:  container,
 		saver:      newSaver(),
 		mutex:      new(sync.RWMutex),
 		declare:    new(QueueDeclare).Default(),
-		bind:       new(QueueBind).Default(),
+		bind:       new(QueueBind).Default().SetExchange(container.GetGlobalExchange().Name),
 		consume:    new(Consume),
 		channelKey: DefaultChannelKey,
 	}
+	return consumer
 }
 
 // Consume consumes the message using the number of workers and handler passed.
