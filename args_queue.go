@@ -39,6 +39,14 @@ type QueueBind struct {
 	Args     amqp.Table
 }
 
+// SetExchange sets the exchange of the queue binding.
+func (q *QueueBind) SetExchange(name string) *QueueBind {
+	if name != "" {
+		q.Exchange = name
+	}
+	return q
+}
+
 // Default sets the default values of the struct variables.
 func (q *QueueBind) Default() *QueueBind {
 	q.Name = DefaultQueue

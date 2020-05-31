@@ -15,10 +15,6 @@ func newInitiator(conn amqpwrapper.IConnectionManager) *initiator {
 }
 
 func (i *initiator) init(topo *Topology) (err error) {
-	if topo == nil {
-		err = ErrTopologyMustNotBeNil
-		return
-	}
 	args := amqpwrapper.InitArgs{
 		Key:      DefaultKeyInitiator,
 		TypeChan: DefaultTypeProducer,
