@@ -8,10 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const (
-	ErrorFormat = "Error: %+v"
-)
-
 func TestPublishAndSubscribe(t *testing.T) {
 	container, err := NewContainer(testSetup.GetConnection())
 	assert.Nil(t, err)
@@ -30,4 +26,22 @@ func TestPublishAndSubscribe(t *testing.T) {
 
 	time.Sleep(1 * time.Second)
 	assert.Equal(t, "test payload", result)
+}
+
+func TestBuildArgs(t *testing.T) {
+	publish := new(OtherPublish).SetContentType("application/json").SetContentEncoding("utf8").SetHeaders(amqp.Table{})
+	assert.EqualValues(t, &OtherPublish{
+		Msg: amqp.Publishing{
+			ContentEncoding: "utf8",
+			ContentType:     "application/json",
+			Headers:         amqp.Table{},
+		},
+	}, publish)
+
+	consume := new(Consume).SetName("test").SetAutoAck().SetArgs(amqp.Table{})
+	assert.EqualValues(t, &Consume{
+		Consumer: "test",
+		AutoAck:  true,
+		Args:     amqp.Table{},
+	}, consume)
 }
