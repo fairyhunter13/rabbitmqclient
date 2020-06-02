@@ -5,6 +5,7 @@ import (
 	"sync/atomic"
 
 	"github.com/fairyhunter13/amqpwrapper"
+	"github.com/panjf2000/ants/v2"
 	"github.com/streadway/amqp"
 )
 
@@ -33,17 +34,15 @@ func (pm *publisherManager) publish(arg Publish) (err error) {
 	select {
 	case idChannel = <-pm.idleChannels:
 		isNew = false
-		defer func(idChannel uint64) {
-			pm.idleChannels <- idChannel
-		}(idChannel)
 	default:
 		isNew = true
 	}
-	err = pm.publishWithChannel(idChannel, arg, isNew)
+	err = pm.publishWithChannel(&idChannel, arg, isNew)
+	pm.releaseChannel(idChannel)
 	return
 }
 
-func (pm *publisherManager) publishWithChannel(idChan uint64, arg Publish, isNew bool) (err error) {
+func (pm *publisherManager) publishWithChannel(idChan *uint64, arg Publish, isNew bool) (err error) {
 	var (
 		ch *amqp.Channel
 	)
@@ -56,15 +55,15 @@ func (pm *publisherManager) publishWithChannel(idChan uint64, arg Publish, isNew
 	return
 }
 
-func (pm *publisherManager) getChannel(idChan uint64, isNew bool) (ch *amqp.Channel, err error) {
+func (pm *publisherManager) getChannel(idChan *uint64, isNew bool) (ch *amqp.Channel, err error) {
 	var (
 		keyChannel string
 	)
 	if isNew {
-		idChan = atomic.LoadUint64(&pm.channelCounter)
+		*idChan = atomic.LoadUint64(&pm.channelCounter)
 		atomic.AddUint64(&pm.channelCounter, 1)
 	}
-	keyChannel = fmt.Sprintf(DefaultKeyProducer, idChan)
+	keyChannel = fmt.Sprintf(DefaultKeyProducer, *idChan)
 	if isNew {
 		ch, err = pm.conn.InitChannelAndGet(EmptyFn, amqpwrapper.InitArgs{
 			Key:      keyChannel,
@@ -74,4 +73,10 @@ func (pm *publisherManager) getChannel(idChan uint64, isNew bool) (ch *amqp.Chan
 		ch, err = pm.conn.GetChannel(keyChannel, DefaultTypeProducer)
 	}
 	return
+}
+
+func (pm *publisherManager) releaseChannel(idChannel uint64) {
+	ants.Submit(func() {
+		pm.idleChannels <- idChannel
+	})
 }

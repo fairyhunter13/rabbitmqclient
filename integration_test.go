@@ -29,13 +29,27 @@ func TestPublish(t *testing.T) {
 			container.GetTopology().
 				AddQueueUnbind(QueueUnbind{QueueBind: QueueBind{Name: "publish-no-unbind"}}),
 		)
-
 		err = container.Publish(
 			"",
 			"",
 			*new(OtherPublish).SetBody([]byte("test payload")),
 		)
 		assert.NotNil(t, err)
+	})
+
+	t.Run("Publish: Heavy Publish", func(t *testing.T) {
+		container, err := testSetup.NewContainer()
+		assert.Nil(t, err)
+
+		for index := 0; index <= 100; index++ {
+			err = container.Publish(
+				"",
+				"",
+				*new(OtherPublish).SetBody([]byte("test payload")),
+			)
+			assert.Nil(t, err)
+		}
+		time.Sleep(200 * time.Millisecond)
 	})
 }
 
