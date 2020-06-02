@@ -14,6 +14,12 @@ type QueueDeclare struct {
 	Args       amqp.Table
 }
 
+// SetAutoDelete is a setter.
+func (q *QueueDeclare) SetAutoDelete(delete bool) *QueueDeclare {
+	q.AutoDelete = delete
+	return q
+}
+
 // Default sets the default values of the struct variables.
 func (q *QueueDeclare) Default() *QueueDeclare {
 	q.Name = DefaultQueue
@@ -41,9 +47,7 @@ type QueueBind struct {
 
 // SetExchange sets the exchange of the queue binding.
 func (q *QueueBind) SetExchange(name string) *QueueBind {
-	if name != "" {
-		q.Exchange = name
-	}
+	q.Exchange = name
 	return q
 }
 
@@ -58,10 +62,7 @@ func (q *QueueBind) Default() *QueueBind {
 
 // QueueUnbind removes the bindings of the queue to an exchange.
 type QueueUnbind struct {
-	Name     string
-	Key      string
-	Exchange string
-	Args     amqp.Table
+	QueueBind
 }
 
 // QueueDelete deletes deletes the bindings, purges the queue, and remove it from the server.

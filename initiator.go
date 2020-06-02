@@ -2,6 +2,7 @@ package rabbitmqclient
 
 import (
 	"github.com/fairyhunter13/amqpwrapper"
+	"github.com/streadway/amqp"
 )
 
 type initiator struct {
@@ -21,4 +22,8 @@ func (i *initiator) init(topo *Topology) (err error) {
 	}
 	_, err = i.conn.InitChannelAndGet(TopologyInitializationFn(topo), args)
 	return
+}
+
+func (i *initiator) getChannel() (*amqp.Channel, error) {
+	return i.conn.GetChannel(DefaultKeyInitiator, DefaultTypeProducer)
 }
