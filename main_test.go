@@ -45,11 +45,8 @@ func (t *TestSetup) GetConnection() amqpwrapper.IConnectionManager {
 	return t.amqpConnectionManager
 }
 
-func (t *TestSetup) GetContainer() (cont *Container, err error) {
-	if t.container == nil {
-		t.container, err = NewContainer(t.GetConnection())
-	}
-	return t.container, err
+func (t *TestSetup) NewContainer() (*Container, error) {
+	return NewContainer(t.GetConnection())
 }
 
 var (

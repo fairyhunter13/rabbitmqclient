@@ -14,7 +14,7 @@ func (c *Container) SetExchange(exc *ExchangeDeclare) *Container {
 func (c *Container) SetExchangeName(name string) *Container {
 	if name != "" {
 		c.mutex.Lock()
-		c.exchange.Name = name
+		c.exchange.SetName(name)
 		c.mutex.Unlock()
 	}
 	return c

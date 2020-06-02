@@ -43,8 +43,8 @@ func NewTopology() *Topology {
 
 func (t *Topology) update() *Topology {
 	t.mutex.Lock()
-	defer t.mutex.Unlock()
-	t.currentTime = time.Now()
+	t.currentTime = time.Now().Add(1 * time.Millisecond)
+	t.mutex.Unlock()
 	return t
 }
 

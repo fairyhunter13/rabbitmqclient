@@ -9,8 +9,8 @@ func (c *Consumer) SetQueueName(withPrefix bool, name string) *Consumer {
 	}
 	newQueueName := GenerateQueueName(withPrefix, name)
 	c.mutex.Lock()
-	c.declare.Name = newQueueName
-	c.bind.Name = newQueueName
+	c.declare.SetName(newQueueName)
+	c.bind.SetName(newQueueName)
 	c.mutex.Unlock()
 	return c
 }
@@ -32,7 +32,7 @@ func (c *Consumer) SetChannelKey(withPrefix bool, name string) *Consumer {
 func (c *Consumer) SetExchangeName(name string) *Consumer {
 	if name != "" {
 		c.mutex.Lock()
-		c.bind.Exchange = name
+		c.bind.SetExchange(name)
 		c.mutex.Unlock()
 	}
 	return c
@@ -44,7 +44,7 @@ func (c *Consumer) SetExchangeName(name string) *Consumer {
 func (c *Consumer) SetTopic(topic string) *Consumer {
 	if topic != "" {
 		c.mutex.Lock()
-		c.bind.Key = topic
+		c.bind.SetKey(topic)
 		c.mutex.Unlock()
 		c.SetQueueName(true, "")
 		c.SetChannelKey(true, "")
