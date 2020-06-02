@@ -82,7 +82,7 @@ func (c *Consumer) initChannelManager(workers int) (err error) {
 func (c *Consumer) runConsumers(workers int, consumeArgs Consume, handler Handler) {
 	consumeArgs.SetQueue(c.getQueue())
 	if workers == 1 {
-		consumeArgs.SetOnlyOneConsumer()
+		consumeArgs.SetExclusive(true)
 	}
 	for numWorker := 1; numWorker <= workers; numWorker++ {
 		go c.loopMessage(consumeArgs, handler)

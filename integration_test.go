@@ -8,30 +8,63 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPublishAndSubscribe(t *testing.T) {
-	container, err := testSetup.GetContainer()
-	assert.Nil(t, err)
+func TestPublish(t *testing.T) {
+	t.Run("Publish: Empty Topic", func(t *testing.T) {
+		container, err := testSetup.NewContainer()
+		assert.Nil(t, err)
 
-	container.SetExchange(new(ExchangeDeclare).Default()).SetExchangeName("integration-test")
-	err = container.Publish(
-		"",
-		"test-publish-subscribe",
-		*new(OtherPublish).SetPersistent().SetBody([]byte("test payload")),
-	)
-	assert.Nil(t, err)
+		err = container.Publish(
+			"",
+			"",
+			*new(OtherPublish).SetBody([]byte("test payload")),
+		)
+		assert.Nil(t, err)
+	})
 
-	var result string
-	testHandler := func(ch *amqp.Channel, msg amqp.Delivery) {
-		msg.Ack(true)
-		result = string(msg.Body)
-	}
-	consumer := container.Consumer()
-	err = consumer.
-		SetTopic("test-publish-subscribe").
-		SetQueueDeclare(consumer.GetQueueDeclare().SetAutoDelete(true)).
-		Consume(1, testHandler)
-	assert.Nil(t, err)
+	t.Run("Publish: Error Topology Init", func(t *testing.T) {
+		container, err := testSetup.NewContainer()
+		assert.Nil(t, err)
 
-	time.Sleep(1 * time.Second)
-	assert.Equal(t, "test payload", result)
+		container.SetTopology(
+			container.GetTopology().
+				AddQueueUnbind(QueueUnbind{QueueBind: QueueBind{Name: "publish-no-unbind"}}),
+		)
+
+		err = container.Publish(
+			"",
+			"",
+			*new(OtherPublish).SetBody([]byte("test payload")),
+		)
+		assert.NotNil(t, err)
+	})
+}
+
+func TestPublishSubscribe(t *testing.T) {
+	t.Run("PublishSubscribe: Normal Case", func(t *testing.T) {
+		container, err := testSetup.NewContainer()
+		assert.Nil(t, err)
+
+		container.SetExchange(new(ExchangeDeclare).Default()).SetExchangeName("integration-test")
+		err = container.Publish(
+			"",
+			"test-normal",
+			*new(OtherPublish).SetPersistent().SetBody([]byte("test payload")),
+		)
+		assert.Nil(t, err)
+
+		var result string
+		testHandler := func(ch *amqp.Channel, msg amqp.Delivery) {
+			msg.Ack(false)
+			result = string(msg.Body)
+		}
+		consumer := container.Consumer()
+		err = consumer.
+			SetTopic("test-normal").
+			SetQueueDeclare(consumer.GetQueueDeclare()).
+			Consume(0, testHandler)
+		assert.Nil(t, err)
+
+		time.Sleep(200 * time.Millisecond)
+		assert.Equal(t, "test payload", result)
+	})
 }

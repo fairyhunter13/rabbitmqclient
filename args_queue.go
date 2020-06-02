@@ -14,9 +14,39 @@ type QueueDeclare struct {
 	Args       amqp.Table
 }
 
+// SetName is a setter.
+func (q *QueueDeclare) SetName(name string) *QueueDeclare {
+	q.Name = name
+	return q
+}
+
+// SetDurable is a setter.
+func (q *QueueDeclare) SetDurable(durable bool) *QueueDeclare {
+	q.Durable = durable
+	return q
+}
+
 // SetAutoDelete is a setter.
 func (q *QueueDeclare) SetAutoDelete(delete bool) *QueueDeclare {
 	q.AutoDelete = delete
+	return q
+}
+
+// SetExclusive is a setter.
+func (q *QueueDeclare) SetExclusive(exclusive bool) *QueueDeclare {
+	q.Exclusive = exclusive
+	return q
+}
+
+// SetNoWait is a setter.
+func (q *QueueDeclare) SetNoWait(noWait bool) *QueueDeclare {
+	q.NoWait = noWait
+	return q
+}
+
+// SetArgs is a setter.
+func (q *QueueDeclare) SetArgs(args amqp.Table) *QueueDeclare {
+	q.Args = args
 	return q
 }
 
@@ -45,9 +75,33 @@ type QueueBind struct {
 	Args     amqp.Table
 }
 
-// SetExchange sets the exchange of the queue binding.
+// SetName is a setter.
+func (q *QueueBind) SetName(name string) *QueueBind {
+	q.Name = name
+	return q
+}
+
+// SetKey is a setter.
+func (q *QueueBind) SetKey(key string) *QueueBind {
+	q.Key = key
+	return q
+}
+
+// SetExchange is a setter.
 func (q *QueueBind) SetExchange(name string) *QueueBind {
 	q.Exchange = name
+	return q
+}
+
+// SetNoWait is a setter.
+func (q *QueueBind) SetNoWait(noWait bool) *QueueBind {
+	q.NoWait = noWait
+	return q
+}
+
+// SetArgs is a setter.
+func (q *QueueBind) SetArgs(args amqp.Table) *QueueBind {
+	q.Args = args
 	return q
 }
 
@@ -71,4 +125,28 @@ type QueueDelete struct {
 	IfUnused bool
 	IfEmpty  bool
 	NoWait   bool
+}
+
+// SetName is a setter.
+func (q *QueueDelete) SetName(name string) *QueueDelete {
+	q.Name = name
+	return q
+}
+
+// SetIfUnused is a setter.
+func (q *QueueDelete) SetIfUnused(ifUnused bool) *QueueDelete {
+	q.IfUnused = ifUnused
+	return q
+}
+
+// SetIfEmpty is a setter.
+func (q *QueueDelete) SetIfEmpty(ifEmpty bool) *QueueDelete {
+	q.IfEmpty = ifEmpty
+	return q
+}
+
+// SetNoWait is a setter.
+func (q *QueueDelete) SetNoWait(noWait bool) *QueueDelete {
+	q.NoWait = noWait
+	return q
 }

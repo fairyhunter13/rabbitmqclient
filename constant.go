@@ -51,7 +51,7 @@ const (
 // List of all delivery modes for amqp rabbitmqclient
 const (
 	DeliveryModeTransient  = 1
-	DelvieryModePersistent = 2
+	DeliveryModePersistent = 2
 )
 
 // List of all topology constants
