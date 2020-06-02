@@ -17,6 +17,7 @@ const (
 
 type TestSetup struct {
 	amqpConnectionManager amqpwrapper.IConnectionManager
+	container             *Container
 }
 
 func newTestSetup() *TestSetup {
@@ -42,6 +43,13 @@ func (t *TestSetup) InitConnection(uriHost string) *TestSetup {
 
 func (t *TestSetup) GetConnection() amqpwrapper.IConnectionManager {
 	return t.amqpConnectionManager
+}
+
+func (t *TestSetup) GetContainer() (cont *Container, err error) {
+	if t.container == nil {
+		t.container, err = NewContainer(t.GetConnection())
+	}
+	return t.container, err
 }
 
 var (

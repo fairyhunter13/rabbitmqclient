@@ -20,17 +20,13 @@ type OtherPublish struct {
 
 // SetContentType sets the content type of message.
 func (op *OtherPublish) SetContentType(contentType string) *OtherPublish {
-	if contentType != "" {
-		op.Msg.ContentType = contentType
-	}
+	op.Msg.ContentType = contentType
 	return op
 }
 
 // SetContentEncoding sets the content encoding of the payload
 func (op *OtherPublish) SetContentEncoding(contentEncoding string) *OtherPublish {
-	if contentEncoding != "" {
-		op.Msg.ContentEncoding = contentEncoding
-	}
+	op.Msg.ContentEncoding = contentEncoding
 	return op
 }
 
@@ -48,10 +44,7 @@ func (op *OtherPublish) SetBody(payload []byte) *OtherPublish {
 
 // SetHeaders sets the headers for the amqp rabbitmq message
 func (op *OtherPublish) SetHeaders(header amqp.Table) *OtherPublish {
-	op.Msg.Headers = amqp.Table{}
-	if header != nil {
-		op.Msg.Headers = header
-	}
+	op.Msg.Headers = header
 	return op
 }
 
@@ -81,25 +74,18 @@ func (c *Consume) SetOnlyOneConsumer() *Consume {
 
 // SetQueue sets the queue name of the consume arguments.
 func (c *Consume) SetQueue(name string) *Consume {
-	queueName := DefaultQueue
-	if name != "" {
-		queueName = name
-	}
-	c.Queue = queueName
+	c.Queue = name
 	return c
 }
 
 // SetAutoAck sets the auto ack to true for automatic acknowledgement.
-// For manual acknowledgement, don't call this function.
-func (c *Consume) SetAutoAck() *Consume {
-	c.AutoAck = true
+func (c *Consume) SetAutoAck(autoAck bool) *Consume {
+	c.AutoAck = autoAck
 	return c
 }
 
 // SetArgs sets the args of the consume function in amqp.
 func (c *Consume) SetArgs(args amqp.Table) *Consume {
-	if args != nil {
-		c.Args = args
-	}
+	c.Args = args
 	return c
 }

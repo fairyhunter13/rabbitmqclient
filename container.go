@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/fairyhunter13/amqpwrapper"
+	"github.com/streadway/amqp"
 )
 
 // Container is the struct to make custom Publisher and Consumer.
@@ -37,9 +38,14 @@ func NewContainer(conn amqpwrapper.IConnectionManager) (res *Container, err erro
 	return
 }
 
-// GetConnection return the underlying connection manager
+// GetConnection return the underlying connection manager.
 func (c *Container) GetConnection() amqpwrapper.IConnectionManager {
 	return c.conn
+}
+
+// GetInitiatorChannel gets the initiator channel from the connection manager.
+func (c *Container) GetInitiatorChannel() (*amqp.Channel, error) {
+	return c.initiator.getChannel()
 }
 
 // Publish publishes the message to the default exchange with the default topic.

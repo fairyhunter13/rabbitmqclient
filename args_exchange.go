@@ -15,6 +15,48 @@ type ExchangeDeclare struct {
 	Args       amqp.Table
 }
 
+// SetName is a setter.
+func (e *ExchangeDeclare) SetName(name string) *ExchangeDeclare {
+	e.Name = name
+	return e
+}
+
+// SetKind is a setter.
+func (e *ExchangeDeclare) SetKind(kind string) *ExchangeDeclare {
+	e.Kind = kind
+	return e
+}
+
+// SetDurable is a setter.
+func (e *ExchangeDeclare) SetDurable(durable bool) *ExchangeDeclare {
+	e.Durable = durable
+	return e
+}
+
+// SetAutoDelete is a setter.
+func (e *ExchangeDeclare) SetAutoDelete(autoDelete bool) *ExchangeDeclare {
+	e.AutoDelete = autoDelete
+	return e
+}
+
+// SetInternal is a setter.
+func (e *ExchangeDeclare) SetInternal(internal bool) *ExchangeDeclare {
+	e.Internal = internal
+	return e
+}
+
+// SetNoWait is a setter.
+func (e *ExchangeDeclare) SetNoWait(noWait bool) *ExchangeDeclare {
+	e.NoWait = noWait
+	return e
+}
+
+// SetArgs is a setter.
+func (e *ExchangeDeclare) SetArgs(args amqp.Table) *ExchangeDeclare {
+	e.Args = args
+	return e
+}
+
 // Default sets the default values of the struct variables.
 func (e *ExchangeDeclare) Default() *ExchangeDeclare {
 	e.Name = DefaultExchange
@@ -40,6 +82,36 @@ type ExchangeBind struct {
 	Args        amqp.Table
 }
 
+// SetDestination is a setter.
+func (e *ExchangeBind) SetDestination(destination string) *ExchangeBind {
+	e.Destination = destination
+	return e
+}
+
+// SetKey is a setter.
+func (e *ExchangeBind) SetKey(key string) *ExchangeBind {
+	e.Key = key
+	return e
+}
+
+// SetSource is a setter.
+func (e *ExchangeBind) SetSource(source string) *ExchangeBind {
+	e.Source = source
+	return e
+}
+
+// SetNoWait is a setter.
+func (e *ExchangeBind) SetNoWait(noWait bool) *ExchangeBind {
+	e.NoWait = noWait
+	return e
+}
+
+// SetArgs is a setter.
+func (e *ExchangeBind) SetArgs(args amqp.Table) *ExchangeBind {
+	e.Args = args
+	return e
+}
+
 // ExchangeUnbind unbinds the exchange using the same argument as the exchange bind.
 type ExchangeUnbind struct {
 	ExchangeBind
@@ -50,4 +122,22 @@ type ExchangeDelete struct {
 	Name     string
 	IfUnused bool
 	NoWait   bool
+}
+
+// SetName is a setter.
+func (e *ExchangeDelete) SetName(name string) *ExchangeDelete {
+	e.Name = name
+	return e
+}
+
+// SetIfUnused is a setter.
+func (e *ExchangeDelete) SetIfUnused(ifUnused bool) *ExchangeDelete {
+	e.IfUnused = ifUnused
+	return e
+}
+
+// SetNoWait is a setter.
+func (e *ExchangeDelete) SetNoWait(noWait bool) *ExchangeDelete {
+	e.NoWait = noWait
+	return e
 }
