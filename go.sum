@@ -1,8 +1,8 @@
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/fairyhunter13/amqpwrapper v1.0.1 h1:G19SX3fIoAmSGupDlVbpuZhHbZU7mOBsXsJQW2zpMGs=
-github.com/fairyhunter13/amqpwrapper v1.0.1/go.mod h1:CLGPeDyESZj+4oVYSc6zM4KMOLbts7uLsNPC7Q3DWfM=
+github.com/fairyhunter13/amqpwrapper v1.0.2 h1:NkVZ6so1K7Uy9oVpWS86EG55GrZ6uLYek2xnAcNCpuI=
+github.com/fairyhunter13/amqpwrapper v1.0.2/go.mod h1:CLGPeDyESZj+4oVYSc6zM4KMOLbts7uLsNPC7Q3DWfM=
 github.com/panjf2000/ants/v2 v2.4.1 h1:7RtUqj5lGOw0WnZhSKDZ2zzJhaX5490ZW1sUolRXCxY=
 github.com/panjf2000/ants/v2 v2.4.1/go.mod h1:f6F0NZVFsGCp5A7QW/Zj/m92atWwOkY0OIhFxRNFr4A=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
