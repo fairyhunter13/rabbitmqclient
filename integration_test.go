@@ -144,5 +144,29 @@ func TestRabbitMQNetwork(t *testing.T) {
 }
 
 func TestConnectionClose(t *testing.T) {
-	// TODO: add connection close testing
+	t.Run("ConnectionClosed: Publish Error", func(t *testing.T) {
+		container, err := testSetup.NewContainerAndConnection()
+		assert.Nil(t, err)
+
+		err = container.Close()
+		assert.Nil(t, err)
+
+		err = container.Publish("", "", *new(OtherPublish).SetBody([]byte("test publih")))
+		assert.Equal(t, ErrConnectionAlreadyClosed, err)
+	})
+
+	t.Run("ConnectionClosed: Consume Error", func(t *testing.T) {
+		container, err := testSetup.NewContainerAndConnection()
+		assert.Nil(t, err)
+
+		err = container.Close()
+		assert.Nil(t, err)
+
+		testHandler := func(ch *amqp.Channel, msg amqp.Delivery) {
+			return
+		}
+
+		err = container.Consumer().Consume(0, testHandler)
+		assert.Equal(t, ErrConnectionAlreadyClosed, err)
+	})
 }
