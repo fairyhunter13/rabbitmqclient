@@ -23,22 +23,27 @@ func newPublisherManager(conn amqpwrapper.IConnectionManager) (res *publisherMan
 }
 
 func (pm *publisherManager) publish(arg Publish) (err error) {
-	var (
-		idChannel uint64
-		isNew     bool
-	)
 	if pm.conn.IsClosed() {
 		err = ErrConnectionAlreadyClosed
 		return
 	}
+
+	var (
+		idChannel uint64
+		isNew     bool
+		more      bool
+	)
 	select {
-	case idChannel = <-pm.idleChannels:
+	case idChannel, more = <-pm.idleChannels:
+		if !more {
+			return
+		}
 		isNew = false
 	default:
 		isNew = true
 	}
+	defer pm.releaseChannel(&idChannel)
 	err = pm.publishWithChannel(&idChannel, arg, isNew)
-	pm.releaseChannel(idChannel)
 	return
 }
 
@@ -75,8 +80,13 @@ func (pm *publisherManager) getChannel(idChan *uint64, isNew bool) (ch *amqp.Cha
 	return
 }
 
-func (pm *publisherManager) releaseChannel(idChannel uint64) {
+func (pm *publisherManager) releaseChannel(idChannel *uint64) {
+	idLocal := *idChannel
 	ants.Submit(func() {
-		pm.idleChannels <- idChannel
+		pm.idleChannels <- idLocal
 	})
+}
+
+func (pm *publisherManager) close() {
+	close(pm.idleChannels)
 }

@@ -236,3 +236,15 @@ func TestGenerator(t *testing.T) {
 	assert.Equal(t, "test", GenerateConsumerChannelKey(false, "test"))
 	assert.Equal(t, "test", GenerateQueueName(false, "test"))
 }
+
+func TestTopology(t *testing.T) {
+	t.Run("Topology: Empty Argument When Declaring", func(t *testing.T) {
+		topology := NewTopology()
+
+		err := topology.Declare(nil, "")
+		assert.NotNil(t, err)
+
+		err = topology.DeclareAll(nil)
+		assert.NotNil(t, err)
+	})
+}
