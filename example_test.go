@@ -15,7 +15,7 @@ func ExampleContainer() {
 	}
 
 	ants.Submit(func() {
-		err = container.
+		err := container.
 			SetExchange(new(ExchangeDeclare).Default()).
 			SetExchangeName("integration-test").
 			Publish(
@@ -42,7 +42,7 @@ func ExampleContainer() {
 		log.Panicln(err)
 	}
 
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(normalTimeSleep)
 	if result != "test payload" {
 		log.Panicf("Expected: %v Actual: %v doesn't match.", "test payload", result)
 	}

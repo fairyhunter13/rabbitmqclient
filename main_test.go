@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/fairyhunter13/amqpwrapper"
 	"github.com/streadway/amqp"
@@ -13,6 +14,10 @@ import (
 
 const (
 	uriDialTemplate = "amqp://guest:guest@%s:5672"
+)
+
+const (
+	normalTimeSleep = 200 * time.Millisecond
 )
 
 type TestSetup struct {
