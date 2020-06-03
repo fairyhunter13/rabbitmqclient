@@ -16,12 +16,13 @@ func ExampleContainer() {
 
 	ants.Submit(func() {
 		err := container.
-			SetExchange(new(ExchangeDeclare).Default()).
 			SetExchangeName("integration-test").
 			Publish(
 				"",
 				"test-normal",
-				*new(OtherPublish).SetPersistent().SetBody([]byte("test payload")),
+				*new(OtherPublish).
+					SetPersistent().
+					SetBody([]byte("test payload")),
 			)
 		if err != nil {
 			log.Panicln(err)
@@ -33,10 +34,9 @@ func ExampleContainer() {
 		msg.Ack(false)
 		result = string(msg.Body)
 	}
-	consumer := container.Consumer()
-	err = consumer.
+	err = container.
+		Consumer().
 		SetTopic("test-normal").
-		SetQueueDeclare(consumer.GetQueueDeclare()).
 		Consume(0, testHandler)
 	if err != nil {
 		log.Panicln(err)
