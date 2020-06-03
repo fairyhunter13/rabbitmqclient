@@ -17,7 +17,7 @@ const (
 )
 
 const (
-	normalTimeSleep = 1 * time.Second
+	normalTimeSleep = 2 * time.Second
 )
 
 type TestSetup struct {
