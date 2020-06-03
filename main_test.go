@@ -17,7 +17,6 @@ const (
 
 type TestSetup struct {
 	amqpConnectionManager amqpwrapper.IConnectionManager
-	container             *Container
 }
 
 func newTestSetup() *TestSetup {
@@ -25,6 +24,23 @@ func newTestSetup() *TestSetup {
 }
 
 func (t *TestSetup) InitConnection(uriHost string) *TestSetup {
+	t.amqpConnectionManager = t.GetNewConnection(uriHost)
+	return t
+}
+
+func (t *TestSetup) NewContainer() (*Container, error) {
+	return NewContainer(t.GetConnection())
+}
+
+func (t *TestSetup) NewContainerAndConnection() (*Container, error) {
+	return NewContainer(t.GetNewConnection(""))
+}
+
+func (t *TestSetup) GetConnection() amqpwrapper.IConnectionManager {
+	return t.amqpConnectionManager
+}
+
+func (t *TestSetup) GetNewConnection(uriHost string) amqpwrapper.IConnectionManager {
 	if uriHost == "" {
 		uriHost = "localhost"
 	}
@@ -32,21 +48,16 @@ func (t *TestSetup) InitConnection(uriHost string) *TestSetup {
 		uriHost = envHost
 	}
 	uriHost = fmt.Sprintf(uriDialTemplate, uriHost)
-	var err error
-	t.amqpConnectionManager, err = amqpwrapper.NewManager(uriHost, amqp.Config{})
+	var (
+		err  error
+		conn amqpwrapper.IConnectionManager
+	)
+	conn, err = amqpwrapper.NewManager(uriHost, amqp.Config{})
 	if err != nil {
 		log.Panicf("Error: %+v", err)
 		os.Exit(1)
 	}
-	return t
-}
-
-func (t *TestSetup) GetConnection() amqpwrapper.IConnectionManager {
-	return t.amqpConnectionManager
-}
-
-func (t *TestSetup) NewContainer() (*Container, error) {
-	return NewContainer(t.GetConnection())
+	return conn
 }
 
 var (
@@ -58,8 +69,14 @@ func initTestSetup() {
 	testSetup = testSetup.InitConnection("localhost")
 }
 
+func teardownTestSetup() {
+	testSetup.amqpConnectionManager.Close()
+}
+
 func TestMain(m *testing.M) {
 	flag.Parse()
 	initTestSetup()
-	os.Exit(m.Run())
+	code := m.Run()
+	teardownTestSetup()
+	os.Exit(code)
 }

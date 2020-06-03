@@ -85,3 +85,10 @@ func (c *Container) Save() *Container {
 	}
 	return c
 }
+
+// Close closes all the resources inside the container.
+func (c *Container) Close() error {
+	err := c.conn.Close()
+	c.publisherManager.close()
+	return err
+}
