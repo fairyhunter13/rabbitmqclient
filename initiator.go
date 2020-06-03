@@ -16,6 +16,10 @@ func newInitiator(conn amqpwrapper.IConnectionManager) *initiator {
 }
 
 func (i *initiator) init(topo *Topology) (err error) {
+	if i.conn.IsClosed() {
+		err = ErrConnectionAlreadyClosed
+		return
+	}
 	args := amqpwrapper.InitArgs{
 		Key:      DefaultKeyInitiator,
 		TypeChan: DefaultTypeProducer,
