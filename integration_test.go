@@ -70,27 +70,46 @@ func TestPublish(t *testing.T) {
 	})
 }
 
+type TestChecker struct {
+	mutex  sync.RWMutex
+	Result string
+}
+
+func (t *TestChecker) SetResult(result string) *TestChecker {
+	t.mutex.Lock()
+	t.Result = result
+	t.mutex.Unlock()
+	return t
+}
+
+func (t *TestChecker) GetResult() string {
+	t.mutex.RLock()
+	defer t.mutex.RUnlock()
+	return t.Result
+}
+
 func TestPublishSubscribe(t *testing.T) {
 	t.Run("PublishSubscribe: Normal Case", func(t *testing.T) {
-		var mutex sync.RWMutex
 		container, err := testSetup.NewContainer()
 		assert.Nil(t, err)
 
 		container.SetExchange(new(ExchangeDeclare).Default()).SetExchangeName("integration-test")
-		err = container.Publish(
-			"",
-			"test-normal",
-			*new(OtherPublish).SetPersistent().SetBody([]byte("test payload")),
-		)
-		assert.Nil(t, err)
 
-		var result string
+		ants.Submit(func() {
+			err := container.Publish(
+				"",
+				"test-normal",
+				*new(OtherPublish).SetPersistent().SetBody([]byte("test normal payload")),
+			)
+			assert.Nil(t, err)
+		})
+
+		testCheck := new(TestChecker)
 		testHandler := func(ch *amqp.Channel, msg amqp.Delivery) {
-			msg.Ack(false)
-			mutex.Lock()
-			result = string(msg.Body)
-			mutex.Unlock()
+			msg.Ack(true)
+			testCheck.SetResult(string(msg.Body))
 		}
+
 		consumer := container.Consumer()
 		err = consumer.
 			SetTopic("test-normal").
@@ -99,9 +118,7 @@ func TestPublishSubscribe(t *testing.T) {
 		assert.Nil(t, err)
 
 		time.Sleep(normalTimeSleep)
-		mutex.RLock()
-		defer mutex.RUnlock()
-		assert.Equal(t, "test payload", result)
+		assert.Equal(t, "test normal payload", testCheck.GetResult())
 	})
 }
 
