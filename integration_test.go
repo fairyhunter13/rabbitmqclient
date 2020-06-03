@@ -1,6 +1,7 @@
 package rabbitmqclient
 
 import (
+	"sync"
 	"testing"
 	"time"
 
@@ -44,7 +45,7 @@ func TestPublish(t *testing.T) {
 
 		for index := 0; index <= 1000; index++ {
 			ants.Submit(func() {
-				err = container.Publish(
+				err := container.Publish(
 					"",
 					"",
 					*new(OtherPublish).SetBody([]byte("test payload")),
@@ -71,6 +72,7 @@ func TestPublish(t *testing.T) {
 
 func TestPublishSubscribe(t *testing.T) {
 	t.Run("PublishSubscribe: Normal Case", func(t *testing.T) {
+		var mutex sync.RWMutex
 		container, err := testSetup.NewContainer()
 		assert.Nil(t, err)
 
@@ -85,7 +87,9 @@ func TestPublishSubscribe(t *testing.T) {
 		var result string
 		testHandler := func(ch *amqp.Channel, msg amqp.Delivery) {
 			msg.Ack(false)
+			mutex.Lock()
 			result = string(msg.Body)
+			mutex.Unlock()
 		}
 		consumer := container.Consumer()
 		err = consumer.
@@ -94,7 +98,9 @@ func TestPublishSubscribe(t *testing.T) {
 			Consume(0, testHandler)
 		assert.Nil(t, err)
 
-		time.Sleep(200 * time.Millisecond)
+		time.Sleep(normalTimeSleep)
+		mutex.RLock()
+		defer mutex.RUnlock()
 		assert.Equal(t, "test payload", result)
 	})
 }
