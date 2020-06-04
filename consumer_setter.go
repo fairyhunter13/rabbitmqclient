@@ -5,7 +5,7 @@ package rabbitmqclient
 // in order to prevent the override of the queue name.
 func (c *Consumer) SetQueueName(withPrefix bool, name string) *Consumer {
 	if name == "" {
-		name = c.getTopic()
+		name = c.getExchangeTopic()
 	}
 	newQueueName := GenerateQueueName(withPrefix, name)
 	c.mutex.Lock()
@@ -20,7 +20,7 @@ func (c *Consumer) SetQueueName(withPrefix bool, name string) *Consumer {
 // the default key for the channel key. The default key is the topic name.
 func (c *Consumer) SetChannelKey(withPrefix bool, name string) *Consumer {
 	if name == "" {
-		name = c.getTopic()
+		name = c.getExchangeTopic()
 	}
 	c.mutex.Lock()
 	c.channelKey = GenerateConsumerChannelKey(withPrefix, name)
