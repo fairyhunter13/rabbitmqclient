@@ -41,3 +41,13 @@ func (c *Consumer) getConsume() *Consume {
 	defer c.mutex.RUnlock()
 	return c.consume
 }
+
+func (c *Consumer) getExchange() string {
+	c.mutex.RLock()
+	defer c.mutex.RUnlock()
+	return c.bind.Exchange
+}
+
+func (c *Consumer) getExchangeTopic() string {
+	return c.getExchange() + "." + c.getTopic()
+}
