@@ -5,7 +5,6 @@ import (
 	"sync/atomic"
 
 	"github.com/fairyhunter13/amqpwrapper"
-	"github.com/panjf2000/ants/v2"
 	"github.com/streadway/amqp"
 )
 
@@ -82,9 +81,9 @@ func (pm *publisherManager) getChannel(idChan *uint64, isNew bool) (ch *amqp.Cha
 
 func (pm *publisherManager) releaseChannel(idChannel *uint64) {
 	idLocal := *idChannel
-	ants.Submit(func() {
+	go func() {
 		pm.idleChannels <- idLocal
-	})
+	}()
 }
 
 func (pm *publisherManager) close() {
