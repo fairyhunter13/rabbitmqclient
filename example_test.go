@@ -4,7 +4,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/panjf2000/ants/v2"
 	"github.com/streadway/amqp"
 )
 
@@ -14,7 +13,7 @@ func ExampleContainer() {
 		log.Panicln(err)
 	}
 
-	ants.Submit(func() {
+	go func() {
 		err := container.
 			SetExchangeName("integration-test").
 			Publish(
@@ -27,7 +26,7 @@ func ExampleContainer() {
 		if err != nil {
 			log.Panicln(err)
 		}
-	})
+	}()
 
 	var result string
 	testHandler := func(ch *amqp.Channel, msg amqp.Delivery) {

@@ -4,7 +4,6 @@ import (
 	"sync"
 
 	"github.com/fairyhunter13/amqpwrapper"
-	"github.com/panjf2000/ants/v2"
 	"github.com/streadway/amqp"
 )
 
@@ -55,9 +54,9 @@ func (c *Consumer) Consume(workers int, handler Handler) (err error) {
 	if err != nil {
 		return
 	}
-	ants.Submit(func() {
+	go func() {
 		c.runConsumers(workers, *c.getConsume(), handler)
-	})
+	}()
 	return
 }
 
@@ -88,9 +87,9 @@ func (c *Consumer) runConsumers(workers int, consumeArgs Consume, handler Handle
 		consumeArgs.SetExclusive(true)
 	}
 	for numWorker := 1; numWorker <= workers; numWorker++ {
-		ants.Submit(func() {
+		go func() {
 			c.loopMessage(consumeArgs, handler)
-		})
+		}()
 	}
 }
 

@@ -5,7 +5,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/panjf2000/ants/v2"
 	"github.com/streadway/amqp"
 	"github.com/stretchr/testify/assert"
 )
@@ -44,14 +43,14 @@ func TestPublish(t *testing.T) {
 		assert.Nil(t, err)
 
 		for index := 0; index <= 1000; index++ {
-			ants.Submit(func() {
+			go func() {
 				err := container.Publish(
 					"",
 					"",
 					*new(OtherPublish).SetBody([]byte("test payload")),
 				)
 				assert.Nil(t, err)
-			})
+			}()
 		}
 	})
 
@@ -95,14 +94,14 @@ func TestPublishSubscribe(t *testing.T) {
 
 		container.SetExchange(new(ExchangeDeclare).Default()).SetExchangeName("integration-test")
 
-		ants.Submit(func() {
+		go func() {
 			err := container.Publish(
 				"",
 				"test-normal",
 				*new(OtherPublish).SetPersistent().SetBody([]byte("test normal payload")),
 			)
 			assert.Nil(t, err)
-		})
+		}()
 
 		testCheck := new(TestChecker)
 		testHandler := func(ch *amqp.Channel, msg amqp.Delivery) {
