@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/fairyhunter13/rabbitmqclient/badge.svg?branch=master)](https://coveralls.io/github/fairyhunter13/rabbitmqclient?branch=master)
 [![CircleCI](https://circleci.com/gh/fairyhunter13/amqpwrapper.svg?style=svg)](https://circleci.com/gh/fairyhunter13/amqpwrapper)
 [![Go Report Card](https://goreportcard.com/badge/github.com/fairyhunter13/rabbitmqclient)](https://goreportcard.com/report/github.com/fairyhunter13/rabbitmqclient)
-<a title="Doc for ants" target="_blank" href="https://pkg.go.dev/github.com/fairyhunter13/rabbitmqclient?tab=doc"><img src="https://img.shields.io/badge/go.dev-doc-007d9c?style=flat-square&logo=read-the-docs"></a>
+<a title="Doc for rabbitmqclient" target="_blank" href="https://pkg.go.dev/github.com/fairyhunter13/rabbitmqclient?tab=doc"><img src="https://img.shields.io/badge/go.dev-doc-007d9c?style=flat-square&logo=read-the-docs"></a>
 
 The rabbitmq client is built using the [fairyhunter13/amqpwrapper](https://github.com/fairyhunter13/amqpwrapper) package.
 This package can manage the topology of queue's network inside the RabbitMQ.
