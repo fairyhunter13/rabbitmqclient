@@ -54,9 +54,7 @@ func (c *Consumer) Consume(workers int, handler Handler) (err error) {
 	if err != nil {
 		return
 	}
-	go func() {
-		c.runConsumers(workers, *c.getConsume(), handler)
-	}()
+	c.runConsumers(workers, *c.getConsume(), handler)
 	return
 }
 
