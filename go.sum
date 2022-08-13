@@ -1,7 +1,7 @@
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/fairyhunter13/amqpwrapper v1.0.2 h1:NkVZ6so1K7Uy9oVpWS86EG55GrZ6uLYek2xnAcNCpuI=
-github.com/fairyhunter13/amqpwrapper v1.0.2/go.mod h1:CLGPeDyESZj+4oVYSc6zM4KMOLbts7uLsNPC7Q3DWfM=
+github.com/fairyhunter13/amqpwrapper v1.0.3 h1:PzhAqvCEdovywMx7Zt0RxwTgq8CuiurulU7bodlpp4U=
+github.com/fairyhunter13/amqpwrapper v1.0.3/go.mod h1:CLGPeDyESZj+4oVYSc6zM4KMOLbts7uLsNPC7Q3DWfM=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/streadway/amqp v0.0.0-20200108173154-1c71cc93ed71/go.mod h1:AZpEONHx3DKn8O/DFsRAY58/XVQiIPMTMB1SddzLXVw=
