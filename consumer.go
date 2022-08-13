@@ -12,7 +12,7 @@ type Consumer struct {
 	container *Container
 	*saver
 
-	mutex *sync.RWMutex
+	mutex sync.RWMutex
 	// mutex protects the following fields
 	declare    *QueueDeclare
 	bind       *QueueBind
@@ -27,7 +27,6 @@ func newConsumer(container *Container) *Consumer {
 	consumer := &Consumer{
 		container:  container,
 		saver:      newSaver(),
-		mutex:      new(sync.RWMutex),
 		declare:    new(QueueDeclare).Default(),
 		bind:       new(QueueBind).Default().SetExchange(container.GetGlobalExchange().Name),
 		consume:    new(Consume),

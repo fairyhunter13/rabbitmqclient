@@ -9,7 +9,7 @@ import (
 // Topology contains all declarations needed to define the topology topology in the rabbitmq.
 type Topology struct {
 	topoVal reflect.Value
-	mutex   *sync.RWMutex
+	mutex   sync.RWMutex
 	// Mutex protects the following fields
 	// exchange topology
 	exchangeDeclare        []ExchangeDeclare
@@ -33,7 +33,6 @@ type Topology struct {
 func NewTopology() *Topology {
 	now := time.Now()
 	topo := &Topology{
-		mutex:       new(sync.RWMutex),
 		currentTime: now,
 		lastTime:    now,
 	}

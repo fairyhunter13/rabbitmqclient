@@ -14,7 +14,7 @@ type Container struct {
 	conn             amqpwrapper.IConnectionManager
 	*saver
 
-	mutex *sync.RWMutex
+	mutex sync.RWMutex
 	// mutex protects the following fields
 	exchange *ExchangeDeclare
 	*Topology
@@ -31,7 +31,6 @@ func NewContainer(conn amqpwrapper.IConnectionManager) (res *Container, err erro
 		initiator:        newInitiator(conn),
 		conn:             conn,
 		saver:            newSaver(),
-		mutex:            new(sync.RWMutex),
 		exchange:         new(ExchangeDeclare).Default(),
 		Topology:         NewTopology(),
 	}
