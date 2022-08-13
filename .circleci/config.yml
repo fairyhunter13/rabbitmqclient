@@ -61,7 +61,6 @@ jobs:
       - run:
           name: "Getting dependencies for coverage"
           command: |
-            go install github.com/mattn/goveralls
             go get github.com/mattn/goveralls
             go get github.com/stretchr/testify/assert
       - run:
